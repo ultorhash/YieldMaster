@@ -5,8 +5,8 @@ import { Header } from '@/components/lending/header'
 import { Filters } from '@/components/lending/filters'
 import { PoolTable } from '@/components/lending/pool-table'
 import { StatsCards } from '@/components/lending/stats-cards'
-import { 
-  mockLendingPools, 
+import {
+  mockLendingPools,
   AssetType,
   LendingPool
 } from '@/lib/lending-data'
@@ -34,7 +34,7 @@ export default function LendingAggregator() {
     try {
       const response = await fetch('/api/yields')
       if (!response.ok) throw new Error('Failed to fetch')
-      
+
       const data = await response.json()
       setPools(data.pools)
       setLastUpdated(new Date(data.lastUpdated))
@@ -112,7 +112,7 @@ export default function LendingAggregator() {
                 </div>
                 <div>
                   <h1 className="text-sm font-semibold text-foreground tracking-tight">
-                    Yield Aggregator
+                    Yield Master
                   </h1>
                   <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                     DeFi Lending Rates
@@ -139,7 +139,7 @@ export default function LendingAggregator() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header 
+      <Header
         onRefresh={handleRefresh}
         isLoading={isLoading}
         lastUpdated={lastUpdated}

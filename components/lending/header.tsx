@@ -29,7 +29,7 @@ export function Header({ onRefresh, isLoading, lastUpdated }: HeaderProps) {
             </div>
             <div>
               <h1 className="text-sm font-semibold text-foreground tracking-tight">
-                Yield Aggregator
+                Yield Master
               </h1>
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 DeFi Lending Rates
