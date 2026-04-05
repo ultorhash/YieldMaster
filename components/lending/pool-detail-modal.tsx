@@ -143,8 +143,8 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
                     <Bug className={`h-4 w-4 shrink-0 mt-0.5 ${exploit.type === 'logic' ? 'text-destructive' : 'text-yellow-500'}`} />
                     <span className="text-muted-foreground">
                       {exploit.type === 'logic'
-                        ? 'This protocol suffered a logic exploit — a flaw in smart contract business logic allowed attackers to drain funds.'
-                        : 'This protocol suffered an oracle exploit — price manipulation was used to attack the protocol.'}
+                        ? 'This protocol suffered a logic exploit. Flaw in smart contract business logic allowed attackers to drain funds.'
+                        : 'This protocol suffered an oracle exploit. Price manipulation was used to attack the protocol.'}
                     </span>
                   </div>
                 </div>
@@ -157,7 +157,7 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
               <AlertTriangle className="h-5 w-5 text-chart-3 shrink-0 mt-0.5" />
               <div className="text-sm text-muted-foreground leading-relaxed">
                 <strong className="text-foreground">Warning:</strong> Risk ratings are indicative and do not constitute investment advice.
-                Always conduct your own research (DYOR) before depositing funds.
+                Always conduct your own research before depositing funds.
                 Smart contract risk, oracle manipulation, and depeg risk are always present in DeFi.
               </div>
             </div>

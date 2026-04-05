@@ -2,6 +2,7 @@
 
 import { RefreshCw } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 
 interface HeaderProps {
   onRefresh: () => void
@@ -24,9 +25,13 @@ export function Header({ onRefresh, isLoading, lastUpdated }: HeaderProps) {
         <div className="flex items-center justify-between h-14">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">YA</span>
-            </div>
+            <Image
+              src="/logo.png"
+              alt="Logo"
+              width={32}
+              height={32}
+              className="object-contain"
+            />
             <div>
               <h1 className="text-sm font-semibold text-foreground tracking-tight">
                 Yield Master
