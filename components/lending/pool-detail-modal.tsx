@@ -14,7 +14,8 @@ const PROTOCOL_URLS: Record<string, string> = {
   'Spark': 'https://app.spark.fi/',
   'Fluid': 'https://fluid.io/lending/1',
   'ExtraFi XLend': 'https://xlend.extrafi.io/',
-  'Auto': 'https://app.auto.finance/'
+  'Auto': 'https://app.auto.finance/',
+  'Moonwell': 'https://moonwell.fi/markets',
 }
 
 interface PoolDetailModalProps {

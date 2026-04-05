@@ -48,7 +48,8 @@ const PROTOCOL_MAPPING: Record<string, string> = {
   'sparklend': 'Spark',
   'fluid-lending': 'Fluid',
   'extra-finance-xlend': 'ExtraFi XLend',
-  'autofinance': 'Auto'
+  'autofinance': 'Auto',
+  'moonwell-lending': 'Moonwell',
 }
 
 const CHAIN_MAPPING: Record<string, string> = {
@@ -69,7 +70,8 @@ const PROTOCOL_URLS: Record<string, string> = {
   'Spark': 'https://app.spark.fi/',
   'Fluid': 'https://fluid.io/lending/1',
   'ExtraFi XLend': 'https://xlend.extrafi.io/',
-  'Auto': 'https://app.auto.finance/'
+  'Auto': 'https://app.auto.finance/',
+  'Moonwell': 'https://moonwell.fi/markets',
 }
 
 function calculateRiskRating(pool: DefiLlamaPool, protocol: string): 'A' | 'B+' | 'B' | 'C+' | 'C' | 'D' {
