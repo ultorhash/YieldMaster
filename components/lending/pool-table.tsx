@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback, memo, useMemo } from 'react'
-import { LendingPool, formatTVL, formatAPY, CHAIN_COLORS, PROTOCOL_COLORS, RISK_COLORS, PROTOCOL_URLS, Protocol } from '@/lib/lending-data'
+import { LendingPool, formatTVL, formatAPY, CHAIN_COLORS, PROTOCOL_COLORS, RISK_COLORS, PROTOCOL_URLS, Protocol, EXPLOITED_PROTOCOLS } from '@/lib/lending-data'
 import { ChevronUp, ChevronDown, Info, Shield, ShieldCheck, ExternalLink, Bug } from 'lucide-react'
 import { PoolDetailModal } from './pool-detail-modal'
 
@@ -21,6 +21,8 @@ interface PoolRowProps {
 }
 
 const PoolRow = memo(function PoolRow({ pool, index, onSelect }: PoolRowProps) {
+  const exploit = EXPLOITED_PROTOCOLS[pool.protocol]
+
   return (
     <tr className={`border-b border-border/50 hover:bg-muted/20 transition-colors ${index % 2 === 0 ? 'bg-transparent' : 'bg-muted/10'}`}>
       <td className="p-4">
@@ -71,11 +73,21 @@ const PoolRow = memo(function PoolRow({ pool, index, onSelect }: PoolRowProps) {
           <span title={pool.audited ? 'Audited' : 'Not Audited'}>
             <ShieldCheck className={`h-4 w-4 ${pool.audited ? 'text-primary' : 'text-muted-foreground/30'}`} />
           </span>
-          <span title={pool.insuranceCoverage ? 'Insurance Coverage' : 'No Insurance'}>
-            <Shield className={`h-4 w-4 ${pool.insuranceCoverage ? 'text-chart-3' : 'text-muted-foreground/30'}`} />
+          <span title={pool.insuranceCoverage ? 'Insurance Available' : 'No Insurance'}>
+            <Shield className={`h-4 w-4 ${pool.insuranceCoverage ? 'text-chart-4' : 'text-muted-foreground/30'}`} />
           </span>
-          <span title={pool.hadExploit ? (pool.exploitDetails || 'Protocol had exploit in the past') : 'No Past Exploits'}>
-            <Bug className={`h-4 w-4 ${pool.hadExploit ? 'text-destructive cursor-help' : 'text-muted-foreground/30'}`} />
+          <span title={
+            exploit
+              ? `${exploit.type === 'logic' ? 'Logic' : 'Oracle'} exploit`
+              : 'No Exploits'
+          }>
+            <Bug className={`h-4 w-4 ${exploit?.type === 'logic'
+              ? 'text-destructive'
+              : exploit?.type === 'oracle'
+                ? 'text-yellow-500'
+                : 'text-muted-foreground/30'
+              }`}
+            />
           </span>
           <button
             onClick={() => onSelect(pool)}
@@ -154,22 +166,23 @@ export function PoolTable({ pools }: PoolTableProps) {
   return (
     <>
       <div className="bg-card border border-border overflow-hidden">
-        <div className="flex items-center justify-between p-4 border-b border-border">
+        <div className="flex flex-wrap items-center justify-between gap-3 p-4 border-b border-border">
           <h2 className="text-sm font-medium text-foreground uppercase tracking-wider">
             Lending Pools
           </h2>
-          <div className="flex items-center gap-6 text-xs text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
             <div className="flex items-center gap-1.5">
               <ShieldCheck className="h-4 w-4 text-primary" />
               <span>Audited</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Shield className="h-4 w-4 text-chart-3" />
+              <Shield className="h-4 w-4 text-chart-4" />
               <span>Insurance</span>
             </div>
             <div className="flex items-center gap-1.5">
+              <Bug className="h-4 w-4 text-yellow-500" />
               <Bug className="h-4 w-4 text-destructive" />
-              <span>Past Exploit</span>
+              <span>Exploit</span>
             </div>
           </div>
         </div>

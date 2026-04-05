@@ -1,4 +1,4 @@
-import { CHAIN_MAPPING, getProtocolUrl, PROTOCOL_MAPPING } from '@/lib/lending-data'
+import { CHAIN_MAPPING, EXPLOIT_PENALTY, EXPLOITED_PROTOCOLS, getProtocolUrl, PROTOCOL_MAPPING, RiskLevel } from '@/lib/lending-data'
 import { NextResponse } from 'next/server'
 
 export const revalidate = 3000
@@ -39,19 +39,22 @@ export interface TransformedPool {
   vaultComposition?: { asset: string; percentage: number; color: string }[]
 }
 
-function calculateRiskRating(pool: DefiLlamaPool, protocol: string): 'A' | 'B+' | 'B' | 'C+' | 'C' | 'D' {
-  const tvl = pool.tvlUsd
-  const isStablecoin = pool.stablecoin
-  const establishedProtocols = ['Aave V3', 'Compound V3', 'Spark']
-  const isEstablished = establishedProtocols.includes(protocol)
+function calculateRiskRating(pool: DefiLlamaPool, protocol: string): RiskLevel {
+  const { tvlUsd: tvl, stablecoin, exposure, ilRisk } = pool
+  const exploit = EXPLOITED_PROTOCOLS[protocol]
 
-  if (tvl > 1_000_000_000 && isEstablished) return 'A'
-  if (tvl > 500_000_000 && isEstablished) return 'B+'
-  if (tvl > 500_000_000 && isStablecoin) return 'B+'
-  if (tvl > 100_000_000) return 'B'
-  if (tvl > 50_000_000) return 'C+'
-  if (tvl > 10_000_000) return 'C'
-  return 'D'
+  const base =
+    tvl > 100_000_000 ? 6 :
+      tvl > 50_000_000 && stablecoin ? 5 :
+        tvl > 10_000_000 ? 4 :
+          tvl > 5_000_000 ? 3 :
+            tvl > 1_000_000 ? 2 : 1
+
+  const bonus = (exposure === 'single' ? 1 : 0) + (ilRisk === 'no' ? 1 : 0)
+  const penalty = exploit ? EXPLOIT_PENALTY[exploit.type] : 0
+
+  const ratings: RiskLevel[] = ['D', 'C', 'C+', 'B', 'B+', 'A']
+  return ratings[Math.min(Math.max(base + bonus - penalty - 1, 0), ratings.length - 1)]
 }
 
 function getAssetType(symbol: string, isStablecoin: boolean): TransformedPool['assetType'] {

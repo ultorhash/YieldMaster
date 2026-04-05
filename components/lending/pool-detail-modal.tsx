@@ -1,6 +1,6 @@
 'use client'
 
-import { LendingPool, formatTVL, formatAPY, RISK_COLORS, getProtocolUrl } from '@/lib/lending-data'
+import { LendingPool, formatTVL, formatAPY, RISK_COLORS, getProtocolUrl, EXPLOITED_PROTOCOLS } from '@/lib/lending-data'
 import { X, Shield, ShieldCheck, ExternalLink, AlertTriangle, Bug } from 'lucide-react'
 import { useEffect } from 'react'
 
@@ -20,16 +20,17 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
 
   if (!pool) return null
 
+  const exploit = EXPLOITED_PROTOCOLS[pool.protocol]
+
   return (
     <div
-      className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 min-h-screen w-full bg-background/80 backdrop-blur-sm flex items-center justify-center p-4"
       onClick={onClose}
     >
       <div
         className="bg-card border border-border w-full max-w-2xl max-h-[90vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-start justify-between p-6 border-b border-border">
           <div>
             <div className="flex items-center gap-3 mb-2">
@@ -50,10 +51,8 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-6 space-y-6">
-          {/* Key Metrics */}
-          <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <div className="bg-muted/30 p-4">
               <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Supply APY</p>
               <p className="text-2xl font-mono font-bold text-primary">{formatAPY(pool.supplyApy)}</p>
@@ -64,34 +63,25 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
             </div>
           </div>
 
-          {/* Vault Composition */}
           {pool.vaultComposition && pool.vaultComposition.length > 0 && (
             <div>
               <h3 className="text-sm font-medium text-foreground mb-3 uppercase tracking-wider">
                 Vault Composition / Exposure
               </h3>
               <div className="space-y-3">
-                {/* Progress bar */}
                 <div className="h-3 flex overflow-hidden">
                   {pool.vaultComposition.map((item, index) => (
                     <div
                       key={index}
                       className="h-full"
-                      style={{
-                        width: `${item.percentage}%`,
-                        backgroundColor: item.color
-                      }}
+                      style={{ width: `${item.percentage}%`, backgroundColor: item.color }}
                     />
                   ))}
                 </div>
-                {/* Legend */}
                 <div className="flex flex-wrap gap-4">
                   {pool.vaultComposition.map((item, index) => (
                     <div key={index} className="flex items-center gap-2">
-                      <span
-                        className="w-3 h-3"
-                        style={{ backgroundColor: item.color }}
-                      />
+                      <span className="w-3 h-3" style={{ backgroundColor: item.color }} />
                       <span className="text-sm text-foreground">{item.asset}</span>
                       <span className="text-sm font-mono text-muted-foreground">{item.percentage}%</span>
                     </div>
@@ -101,7 +91,6 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
             </div>
           )}
 
-          {/* Risk Assessment */}
           <div>
             <h3 className="text-sm font-medium text-foreground mb-3 uppercase tracking-wider">
               Risk Assessment
@@ -122,45 +111,47 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck
-                    className={`h-4 w-4 ${pool.audited ? 'text-primary' : 'text-muted-foreground/30'}`}
-                  />
+                  <ShieldCheck className={`h-4 w-4 ${pool.audited ? 'text-primary' : 'text-muted-foreground/30'}`} />
                   <span className={`text-sm ${pool.audited ? 'text-foreground' : 'text-muted-foreground'}`}>
                     {pool.audited ? 'Audited Contracts' : 'Not Audited'}
                   </span>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Shield
-                    className={`h-4 w-4 ${pool.insuranceCoverage ? 'text-chart-3' : 'text-muted-foreground/30'}`}
-                  />
+                  <Shield className={`h-4 w-4 ${pool.insuranceCoverage ? 'text-chart-4' : 'text-muted-foreground/30'}`} />
                   <span className={`text-sm ${pool.insuranceCoverage ? 'text-foreground' : 'text-muted-foreground'}`}>
-                    {pool.insuranceCoverage ? 'Insurance Coverage' : 'No Insurance'}
+                    {pool.insuranceCoverage ? 'Insurance Available' : 'No Insurance'}
                   </span>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Bug
-                    className={`h-4 w-4 ${pool.hadExploit ? 'text-destructive' : 'text-muted-foreground/30'}`}
-                  />
-                  <span className={`text-sm ${pool.hadExploit ? 'text-foreground' : 'text-muted-foreground'}`}>
-                    {pool.hadExploit ? 'Past Exploit' : 'No Past Exploits'}
+                  <Bug className={`h-4 w-4 ${exploit?.type === 'logic' ? 'text-destructive' :
+                    exploit?.type === 'oracle' ? 'text-yellow-500' :
+                      'text-muted-foreground/30'
+                    }`} />
+                  <span className={`text-sm ${exploit ? 'text-foreground' : 'text-muted-foreground'}`}>
+                    {exploit?.type === 'logic' ? 'Logic Exploit' :
+                      exploit?.type === 'oracle' ? 'Oracle Exploit' :
+                        'No Past Exploits'}
                   </span>
                 </div>
               </div>
 
-              {pool.hadExploit && pool.exploitDetails && (
+              {exploit && (
                 <div className="pt-2 border-t border-border">
                   <div className="flex items-start gap-2 text-sm">
-                    <Bug className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
-                    <span className="text-muted-foreground">{pool.exploitDetails}</span>
+                    <Bug className={`h-4 w-4 shrink-0 mt-0.5 ${exploit.type === 'logic' ? 'text-destructive' : 'text-yellow-500'}`} />
+                    <span className="text-muted-foreground">
+                      {exploit.type === 'logic'
+                        ? 'This protocol suffered a logic exploit — a flaw in smart contract business logic allowed attackers to drain funds.'
+                        : 'This protocol suffered an oracle exploit — price manipulation was used to attack the protocol.'}
+                    </span>
                   </div>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Risk Description */}
           <div className="bg-muted/20 border border-border p-4">
             <div className="flex items-start gap-3">
               <AlertTriangle className="h-5 w-5 text-chart-3 shrink-0 mt-0.5" />
@@ -173,7 +164,6 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
           </div>
         </div>
 
-        {/* Footer */}
         <div className="p-6 border-t border-border flex flex-col sm:flex-row justify-between gap-3">
           <a
             href={`https://defillama.com/yields/pool/${pool.defiLlamaPoolId || pool.id}`}

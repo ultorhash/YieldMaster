@@ -16,6 +16,10 @@ export type Protocol = typeof PROTOCOLS[number]
 export type AssetType = typeof ASSET_TYPES[number]
 export type RiskLevel = typeof RISK_LEVELS[number]
 
+export interface ExploitRecord {
+  type: 'logic' | 'oracle'
+}
+
 export interface VaultComposition {
   asset: string
   percentage: number
@@ -149,6 +153,21 @@ export const PROTOCOL_URLS: Record<Protocol, string> = {
   'Loopscale': 'https://app.loopscale.com/lend',
   'Navi': 'https://app.naviprotocol.io/',
   'Scallop': 'https://app.scallop.io/'
+}
+
+export const EXPLOITED_PROTOCOLS: Record<string, ExploitRecord> = {
+  'Aave V3': { type: 'oracle' },
+  'Morpho': { type: 'oracle' },
+  'Moonwell': { type: 'logic' },
+  'Dolomite': { type: 'logic' },
+  'YO': { type: 'logic' },
+  'Save': { type: 'oracle' },
+  'Loopscale': { type: 'oracle' }
+}
+
+export const EXPLOIT_PENALTY: Record<ExploitRecord['type'], number> = {
+  logic: 2,
+  oracle: 1
 }
 
 export function getProtocolUrl(protocol: string): string {
