@@ -1,24 +1,8 @@
 'use client'
 
-import { LendingPool, formatTVL, formatAPY, RISK_COLORS } from '@/lib/lending-data'
+import { LendingPool, formatTVL, formatAPY, RISK_COLORS, getProtocolUrl } from '@/lib/lending-data'
 import { X, Shield, ShieldCheck, ExternalLink, AlertTriangle, Bug } from 'lucide-react'
 import { useEffect } from 'react'
-
-// Static protocol URLs - no dynamic mapping
-const PROTOCOL_URLS: Record<string, string> = {
-  'Aave V3': 'https://app.aave.com/',
-  'Aave V4': 'https://pro.aave.com/',
-  'Morpho': 'https://app.morpho.org/vaults',
-  'Euler': 'https://app.euler.finance/',
-  'Compound V3': 'https://app.compound.finance/',
-  'Spark': 'https://app.spark.fi/',
-  'Fluid': 'https://fluid.io/lending/1',
-  'ExtraFi XLend': 'https://xlend.extrafi.io/',
-  'Auto': 'https://app.auto.finance/',
-  'Moonwell': 'https://moonwell.fi/markets',
-  '40acres': 'https://www.40acres.finance/',
-  'Dolomite': 'https://app.dolomite.io/earn'
-}
 
 interface PoolDetailModalProps {
   pool: LendingPool | null
@@ -208,7 +192,7 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
               Close
             </button>
             <a
-              href={PROTOCOL_URLS[pool.protocol] || `https://defillama.com/protocol/${pool.protocol.toLowerCase().replace(/\s+/g, '-')}`}
+              href={getProtocolUrl(pool.protocol)}
               target="_blank"
               rel="noopener noreferrer"
               className="px-4 py-2 text-sm bg-primary text-primary-foreground hover:bg-primary/90 transition-colors flex items-center gap-2 cursor-pointer"
