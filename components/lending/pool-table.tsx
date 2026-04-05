@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, memo } from 'react'
+import { useState, useCallback, memo, useMemo } from 'react'
 import { LendingPool, formatTVL, formatAPY, CHAIN_COLORS, PROTOCOL_COLORS, RISK_COLORS, PROTOCOL_URLS, Protocol } from '@/lib/lending-data'
 import { ChevronUp, ChevronDown, Info, Shield, ShieldCheck, ExternalLink, Bug } from 'lucide-react'
 import { PoolDetailModal } from './pool-detail-modal'
@@ -22,10 +22,7 @@ interface PoolRowProps {
 
 const PoolRow = memo(function PoolRow({ pool, index, onSelect }: PoolRowProps) {
   return (
-    <tr
-      className={`border-b border-border/50 hover:bg-muted/20 transition-colors ${index % 2 === 0 ? 'bg-transparent' : 'bg-muted/10'
-        }`}
-    >
+    <tr className={`border-b border-border/50 hover:bg-muted/20 transition-colors ${index % 2 === 0 ? 'bg-transparent' : 'bg-muted/10'}`}>
       <td className="p-4">
         <div className="flex items-center gap-2">
           <span className="font-mono font-medium text-foreground">{pool.asset}</span>
@@ -53,9 +50,7 @@ const PoolRow = memo(function PoolRow({ pool, index, onSelect }: PoolRowProps) {
         </div>
       </td>
       <td className="p-4 text-right">
-        <span className="font-mono text-primary font-medium">
-          {formatAPY(pool.supplyApy)}
-        </span>
+        <span className="font-mono text-primary font-medium">{formatAPY(pool.supplyApy)}</span>
       </td>
       <td className="p-4 text-right">
         <span className="font-mono text-muted-foreground">
@@ -63,17 +58,12 @@ const PoolRow = memo(function PoolRow({ pool, index, onSelect }: PoolRowProps) {
         </span>
       </td>
       <td className="p-4 text-right">
-        <span className="font-mono text-sm text-foreground">
-          {formatTVL(pool.tvl)}
-        </span>
+        <span className="font-mono text-sm text-foreground">{formatTVL(pool.tvl)}</span>
       </td>
       <td className="p-4 text-right">
         <div className="flex items-center justify-end gap-2">
           <div className="w-16 h-1.5 bg-muted overflow-hidden">
-            <div
-              className="h-full bg-primary/70"
-              style={{ width: `${pool.utilization}%` }}
-            />
+            <div className="h-full bg-primary/70" style={{ width: `${Math.min(pool.utilization, 100)}%` }} />
           </div>
           <span className="font-mono text-xs text-muted-foreground w-12 text-right">
             {pool.utilization.toFixed(1)}%
@@ -96,11 +86,9 @@ const PoolRow = memo(function PoolRow({ pool, index, onSelect }: PoolRowProps) {
           <span title={pool.audited ? 'Audited' : 'Not Audited'}>
             <ShieldCheck className={`h-4 w-4 ${pool.audited ? 'text-primary' : 'text-muted-foreground/30'}`} />
           </span>
-
           <span title={pool.insuranceCoverage ? 'Insurance Coverage' : 'No Insurance'}>
             <Shield className={`h-4 w-4 ${pool.insuranceCoverage ? 'text-chart-3' : 'text-muted-foreground/30'}`} />
           </span>
-
           <span title={pool.hadExploit ? (pool.exploitDetails || 'Protocol had exploit in the past') : 'No Past Exploits'}>
             <Bug className={`h-4 w-4 ${pool.hadExploit ? 'text-destructive cursor-help' : 'text-muted-foreground/30'}`} />
           </span>
@@ -133,50 +121,43 @@ export function PoolTable({ pools }: PoolTableProps) {
   const [selectedPool, setSelectedPool] = useState<LendingPool | null>(null)
 
   const handleSort = useCallback((key: SortKey) => {
-    setSortKey(prev => {
-      if (prev === key) {
-        setSortDirection(d => d === 'asc' ? 'desc' : 'asc')
-        return prev
+    setSortDirection(prev => sortKey === key ? (prev === 'asc' ? 'desc' : 'asc') : (key === 'riskRating' ? 'asc' : 'desc'))
+    setSortKey(key)
+  }, [sortKey])
+
+  const handleSelect = useCallback((pool: LendingPool) => setSelectedPool(pool), [])
+  const handleClose = useCallback(() => setSelectedPool(null), [])
+
+  const sortedPools = useMemo(() => {
+    return [...pools].sort((a, b) => {
+      let comparison = 0
+      switch (sortKey) {
+        case 'asset': comparison = a.asset.localeCompare(b.asset); break
+        case 'protocol': comparison = a.protocol.localeCompare(b.protocol); break
+        case 'chain': comparison = a.chain.localeCompare(b.chain); break
+        case 'supplyApy': comparison = a.supplyApy - b.supplyApy; break
+        case 'borrowApy': comparison = a.borrowApy - b.borrowApy; break
+        case 'tvl': comparison = a.tvl - b.tvl; break
+        case 'utilization': comparison = a.utilization - b.utilization; break
+        case 'riskRating': comparison = riskOrder[a.riskRating] - riskOrder[b.riskRating]; break
       }
-      setSortDirection(key === 'riskRating' ? 'asc' : 'desc')
-      return key
+      return sortDirection === 'asc' ? comparison : -comparison
     })
-  }, [])
+  }, [pools, sortKey, sortDirection])
 
-  const handleSelect = useCallback((pool: LendingPool) => {
-    setSelectedPool(pool)
-  }, [])
-
-  const handleClose = useCallback(() => {
-    setSelectedPool(null)
-  }, [])
-
-  const sortedPools = [...pools].sort((a, b) => {
-    let comparison = 0
-    switch (sortKey) {
-      case 'asset': comparison = a.asset.localeCompare(b.asset); break
-      case 'protocol': comparison = a.protocol.localeCompare(b.protocol); break
-      case 'chain': comparison = a.chain.localeCompare(b.chain); break
-      case 'supplyApy': comparison = a.supplyApy - b.supplyApy; break
-      case 'borrowApy': comparison = a.borrowApy - b.borrowApy; break
-      case 'tvl': comparison = a.tvl - b.tvl; break
-      case 'utilization': comparison = a.utilization - b.utilization; break
-      case 'riskRating': comparison = riskOrder[a.riskRating] - riskOrder[b.riskRating]; break
-    }
-    return sortDirection === 'asc' ? comparison : -comparison
-  })
-
-  const SortHeader = ({ label, sortKeyName }: { label: string; sortKeyName: SortKey }) => (
-    <button
+  const SortTh = ({ label, sortKeyName, align = 'left' }: { label: string; sortKeyName: SortKey; align?: 'left' | 'right' | 'center' }) => (
+    <th
+      className="p-4 cursor-pointer select-none"
       onClick={() => handleSort(sortKeyName)}
-      className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider font-medium cursor-pointer"
     >
-      {label}
-      <span className="flex flex-col">
-        <ChevronUp className={`h-3 w-3 -mb-1 ${sortKey === sortKeyName && sortDirection === 'asc' ? 'text-primary' : 'text-muted-foreground/40'}`} />
-        <ChevronDown className={`h-3 w-3 ${sortKey === sortKeyName && sortDirection === 'desc' ? 'text-primary' : 'text-muted-foreground/40'}`} />
-      </span>
-    </button>
+      <div className={`flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider font-medium ${align === 'right' ? 'justify-end' : align === 'center' ? 'justify-center' : 'justify-start'}`}>
+        {label}
+        <span className="flex flex-col">
+          <ChevronUp className={`h-3 w-3 -mb-1 ${sortKey === sortKeyName && sortDirection === 'asc' ? 'text-primary' : 'text-muted-foreground/40'}`} />
+          <ChevronDown className={`h-3 w-3 ${sortKey === sortKeyName && sortDirection === 'desc' ? 'text-primary' : 'text-muted-foreground/40'}`} />
+        </span>
+      </div>
+    </th>
   )
 
   if (pools.length === 0) {
@@ -213,15 +194,15 @@ export function PoolTable({ pools }: PoolTableProps) {
           <table className="w-full">
             <thead>
               <tr className="border-b border-border bg-muted/30">
-                <th className="text-left p-4"><SortHeader label="Asset" sortKeyName="asset" /></th>
-                <th className="text-left p-4"><SortHeader label="Protocol" sortKeyName="protocol" /></th>
-                <th className="text-left p-4"><SortHeader label="Chain" sortKeyName="chain" /></th>
-                <th className="text-right p-4"><SortHeader label="Supply APY" sortKeyName="supplyApy" /></th>
-                <th className="text-right p-4"><SortHeader label="Borrow APY" sortKeyName="borrowApy" /></th>
-                <th className="text-right p-4"><SortHeader label="TVL" sortKeyName="tvl" /></th>
-                <th className="text-right p-4"><SortHeader label="Utilization" sortKeyName="utilization" /></th>
-                <th className="text-center p-4"><SortHeader label="Risk" sortKeyName="riskRating" /></th>
-                <th className="text-center p-4">
+                <SortTh label="Asset" sortKeyName="asset" />
+                <SortTh label="Protocol" sortKeyName="protocol" />
+                <SortTh label="Chain" sortKeyName="chain" />
+                <SortTh label="Supply APY" sortKeyName="supplyApy" align="right" />
+                <SortTh label="Borrow APY" sortKeyName="borrowApy" align="right" />
+                <SortTh label="TVL" sortKeyName="tvl" align="right" />
+                <SortTh label="Utilization" sortKeyName="utilization" align="right" />
+                <SortTh label="Risk" sortKeyName="riskRating" align="center" />
+                <th className="p-4 text-center">
                   <span className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Info</span>
                 </th>
               </tr>
