@@ -1,9 +1,14 @@
 export const ASSET_TYPES = ['Stablecoin', 'Blue Chip', 'LST', 'LRT', 'Volatile'] as const
 export const RISK_LEVELS = ['A', 'B+', 'B', 'C+', 'C', 'D'] as const
-export const CHAINS = ['Ethereum', 'Arbitrum', 'Base', 'Optimism', 'Polygon', 'Avalanche'] as const
+export const CHAINS = [
+  'Ethereum', 'Arbitrum', 'Base', 'Optimism', 'Polygon', 'Avalanche',
+  'HyperEVM'
+] as const
 export const PROTOCOLS = [
   'Aave V3', 'Aave V4', 'Morpho', 'Euler', 'Compound V3', 'Spark', 'Fluid',
-  'ExtraFi XLend', 'Auto', 'Moonwell', '40acres', 'Dolomite'] as const
+  'ExtraFi XLend', 'Auto', 'Moonwell', '40acres', 'Dolomite', 'HyperLend',
+  'HypurrFi'
+] as const
 
 export type Chain = typeof CHAINS[number]
 export type Protocol = typeof PROTOCOLS[number]
@@ -41,22 +46,25 @@ export const CHAIN_COLORS: Record<Chain, string> = {
   'Base': '#0052FF',
   'Optimism': '#FF0420',
   'Polygon': '#8247E5',
-  'Avalanche': '#E84142'
+  'Avalanche': '#E84142',
+  'HyperEVM': '#0F3933'
 }
 
 export const PROTOCOL_COLORS: Record<Protocol, string> = {
   'Aave V3': '#B6509E',
-  'Aave V4': '#9d0affff',
+  'Aave V4': '#9D0AFF',
   'Morpho': '#1E88E5',
   'Euler': '#E6007A',
   'Compound V3': '#00D395',
   'Spark': '#F7931A',
   'Fluid': '#6366F1',
-  'ExtraFi XLend': '#5052c9ff',
+  'ExtraFi XLend': '#5052C9',
   'Auto': '#000000',
-  'Moonwell': '#0069d3',
-  '40acres': '#0a5631ff',
-  'Dolomite': '#ffffffff'
+  'Moonwell': '#0069D3',
+  '40acres': '#0A5631',
+  'Dolomite': '#FFFFFF',
+  'HyperLend': '#13584E',
+  'HypurrFi': '#A8E11A'
 }
 
 export const RISK_COLORS: Record<RiskLevel, string> = {
@@ -66,6 +74,35 @@ export const RISK_COLORS: Record<RiskLevel, string> = {
   'C+': '#F97316',
   'C': '#EF4444',
   'D': '#DC2626'
+}
+
+export const CHAIN_MAPPING: Record<string, string> = {
+  'Ethereum': 'Ethereum',
+  'Arbitrum': 'Arbitrum',
+  'Base': 'Base',
+  'Optimism': 'Optimism',
+  'Polygon': 'Polygon',
+  'Avalanche': 'Avalanche',
+  'Hyperliquid L1': 'HyperEVM'
+}
+
+export const PROTOCOL_MAPPING: Record<string, string> = {
+  'aave-v3': 'Aave V3',
+  'aave-v4': 'Aave V4',
+  'morpho-v1': 'Morpho',
+  'euler-v2': 'Euler',
+  'compound-v3': 'Compound V3',
+  'spark-savings': 'Spark',
+  'sparklend': 'Spark',
+  'fluid-lending': 'Fluid',
+  'extra-finance-xlend': 'ExtraFi XLend',
+  'autofinance': 'Auto',
+  'moonwell-lending': 'Moonwell',
+  '40-acres': '40acres',
+  'dolomite': 'Dolomite',
+  'hyperlend-pooled': 'HyperLend',
+  'hypurrfi-isolated': 'HypurrFi',
+  'hypurrfi-pooled': 'HypurrFi'
 }
 
 export const PROTOCOL_URLS: Record<Protocol, string> = {
@@ -80,7 +117,9 @@ export const PROTOCOL_URLS: Record<Protocol, string> = {
   'Auto': 'https://app.auto.finance/',
   'Moonwell': 'https://moonwell.fi/markets',
   '40acres': 'https://www.40acres.finance/',
-  'Dolomite': 'https://app.dolomite.io/earn'
+  'Dolomite': 'https://app.dolomite.io/earn',
+  'HyperLend': 'https://app.hyperlend.finance/markets',
+  'HypurrFi': 'https://hypurrfi.com/lend'
 }
 
 export function getProtocolUrl(protocol: string): string {

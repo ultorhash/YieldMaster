@@ -1,6 +1,7 @@
+import { CHAIN_MAPPING, getProtocolUrl, PROTOCOL_MAPPING } from '@/lib/lending-data'
 import { NextResponse } from 'next/server'
 
-export const revalidate = 300
+export const revalidate = 3000
 
 interface DefiLlamaPool {
   chain: string
@@ -38,46 +39,6 @@ export interface TransformedPool {
   vaultComposition?: { asset: string; percentage: number; color: string }[]
 }
 
-const PROTOCOL_MAPPING: Record<string, string> = {
-  'aave-v3': 'Aave V3',
-  'aave-v4': 'Aave V4',
-  'morpho-v1': 'Morpho',
-  'euler-v2': 'Euler',
-  'compound-v3': 'Compound V3',
-  'spark-savings': 'Spark',
-  'sparklend': 'Spark',
-  'fluid-lending': 'Fluid',
-  'extra-finance-xlend': 'ExtraFi XLend',
-  'autofinance': 'Auto',
-  'moonwell-lending': 'Moonwell',
-  '40-acres': '40acres',
-  'dolomite': 'Dolomite'
-}
-
-const CHAIN_MAPPING: Record<string, string> = {
-  'Ethereum': 'Ethereum',
-  'Arbitrum': 'Arbitrum',
-  'Base': 'Base',
-  'Optimism': 'Optimism',
-  'Polygon': 'Polygon',
-  'Avalanche': 'Avalanche',
-}
-
-const PROTOCOL_URLS: Record<string, string> = {
-  'Aave V3': 'https://app.aave.com/',
-  'Aave V4': 'https://pro.aave.com/',
-  'Morpho': 'https://app.morpho.org/vaults',
-  'Euler': 'https://app.euler.finance/',
-  'Compound V3': 'https://app.compound.finance/',
-  'Spark': 'https://app.spark.fi/',
-  'Fluid': 'https://fluid.io/lending/1',
-  'ExtraFi XLend': 'https://xlend.extrafi.io/',
-  'Auto': 'https://app.auto.finance/',
-  'Moonwell': 'https://moonwell.fi/markets',
-  '40acres': 'https://www.40acres.finance/',
-  'Dolomite': 'https://app.dolomite.io/earn'
-}
-
 function calculateRiskRating(pool: DefiLlamaPool, protocol: string): 'A' | 'B+' | 'B' | 'C+' | 'C' | 'D' {
   const tvl = pool.tvlUsd
   const isStablecoin = pool.stablecoin
@@ -112,7 +73,7 @@ function hasInsuranceCoverage(protocol: string): boolean {
 export async function GET() {
   try {
     const response = await fetch('https://yields.llama.fi/pools', {
-      next: { revalidate: 300 }
+      next: { revalidate: revalidate }
     })
 
     if (!response.ok) throw new Error('Failed to fetch yields data')
@@ -135,7 +96,7 @@ export async function GET() {
       const chain = CHAIN_MAPPING[pool.chain] || pool.chain
       const symbol = pool.symbol.split('-')[0].replace(/[^A-Za-z0-9]/g, '')
       const supplyApy = pool.apy || pool.apyBase || 0
-      const poolUrl = PROTOCOL_URLS[protocol] || `https://defillama.com/yields/pool/${pool.pool}`
+      const poolUrl = getProtocolUrl(protocol)
 
       return {
         id: pool.pool,

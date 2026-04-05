@@ -176,16 +176,10 @@ export default function LendingAggregator() {
 
         {/* Footer */}
         <footer className="pt-6 border-t border-border">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-            <p>
+          <div className="flex flex-col items-center text-xs text-muted-foreground">
+            <p className="text-center">
               Data is presented for informational purposes only. It does not constitute investment advice.
             </p>
-            <div className="flex items-center gap-4">
-              <span className="flex items-center gap-1.5">
-                <span className={`w-2 h-2 rounded-full ${dataSource === 'live' ? 'bg-primary animate-pulse' : 'bg-chart-3'}`} />
-                {dataSource === 'live' ? 'Live data from DeFiLlama' : 'Using cached data'}
-              </span>
-            </div>
           </div>
         </footer>
       </main>
