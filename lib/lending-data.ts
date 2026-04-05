@@ -7,7 +7,7 @@ export const CHAINS = [
 export const PROTOCOLS = [
   'Aave V3', 'Aave V4', 'Morpho', 'Euler', 'Compound V3', 'Spark', 'Fluid',
   'ExtraFi XLend', 'Auto', 'Moonwell', '40acres', 'Dolomite', 'HyperLend',
-  'HypurrFi', 'Kamino'
+  'HypurrFi', 'Kamino', 'Save'
 ] as const
 
 export type Chain = typeof CHAINS[number]
@@ -87,7 +87,8 @@ export const PROTOCOL_COLORS: Record<Protocol, string> = {
   'Dolomite': '#FFFFFF',
   'HyperLend': '#13584E',
   'HypurrFi': '#A8E11A',
-  'Kamino': '#272F7D'
+  'Kamino': '#272F7D',
+  'Save': '#FF4F0F'
 }
 
 export const PROTOCOL_MAPPING: Record<string, string> = {
@@ -107,7 +108,8 @@ export const PROTOCOL_MAPPING: Record<string, string> = {
   'hyperlend-pooled': 'HyperLend',
   'hypurrfi-isolated': 'HypurrFi',
   'hypurrfi-pooled': 'HypurrFi',
-  'kamino-lend': 'Kamino'
+  'kamino-lend': 'Kamino',
+  'save': 'Save'
 }
 
 export const PROTOCOL_URLS: Record<Protocol, string> = {
@@ -125,7 +127,8 @@ export const PROTOCOL_URLS: Record<Protocol, string> = {
   'Dolomite': 'https://app.dolomite.io/earn',
   'HyperLend': 'https://app.hyperlend.finance/markets',
   'HypurrFi': 'https://hypurrfi.com/lend',
-  'Kamino': 'https://kamino.com/lend'
+  'Kamino': 'https://kamino.com/lend',
+  'Save': 'https://save.finance/'
 }
 
 export function getProtocolUrl(protocol: string): string {
