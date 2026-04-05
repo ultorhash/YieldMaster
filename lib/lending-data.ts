@@ -1,5 +1,5 @@
 export const CHAINS = ['Ethereum', 'Arbitrum', 'Base', 'Optimism', 'Polygon', 'Avalanche'] as const
-export const PROTOCOLS = ['Aave V3', 'Aave V4', 'Morpho', 'Euler', 'Compound V3', 'Spark', 'Fluid', 'ExtraFi XLend'] as const
+export const PROTOCOLS = ['Aave V3', 'Aave V4', 'Morpho', 'Euler', 'Compound V3', 'Spark', 'Fluid', 'ExtraFi XLend', 'Auto'] as const
 export const ASSET_TYPES = ['Stablecoin', 'Blue Chip', 'LST', 'LRT', 'Volatile'] as const
 export const RISK_LEVELS = ['A', 'B+', 'B', 'C+', 'C', 'D'] as const
 
@@ -52,7 +52,8 @@ export const PROTOCOL_COLORS: Record<Protocol, string> = {
   'Compound V3': '#00D395',
   'Spark': '#F7931A',
   'Fluid': '#6366F1',
-  'ExtraFi XLend': '#5052c9ff'
+  'ExtraFi XLend': '#5052c9ff',
+  'Auto': '#000000'
 }
 
 export const RISK_COLORS: Record<RiskLevel, string> = {
@@ -72,7 +73,8 @@ export const PROTOCOL_URLS: Record<Protocol, string> = {
   'Compound V3': 'https://app.compound.finance/',
   'Spark': 'https://app.spark.fi/',
   'Fluid': 'https://fluid.io/lending/1',
-  'ExtraFi XLend': 'https://xlend.extrafi.io/'
+  'ExtraFi XLend': 'https://xlend.extrafi.io/',
+  'Auto': 'https://app.auto.finance/'
 }
 
 export function getProtocolUrl(protocol: string): string {
