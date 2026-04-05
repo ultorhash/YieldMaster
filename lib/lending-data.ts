@@ -3,7 +3,7 @@ export const RISK_LEVELS = ['A', 'B+', 'B', 'C+', 'C', 'D'] as const
 export const CHAINS = ['Ethereum', 'Arbitrum', 'Base', 'Optimism', 'Polygon', 'Avalanche'] as const
 export const PROTOCOLS = [
   'Aave V3', 'Aave V4', 'Morpho', 'Euler', 'Compound V3', 'Spark', 'Fluid',
-  'ExtraFi XLend', 'Auto', 'Moonwell', '40acres'] as const
+  'ExtraFi XLend', 'Auto', 'Moonwell', '40acres', 'Dolomite'] as const
 
 export type Chain = typeof CHAINS[number]
 export type Protocol = typeof PROTOCOLS[number]
@@ -55,7 +55,8 @@ export const PROTOCOL_COLORS: Record<Protocol, string> = {
   'ExtraFi XLend': '#5052c9ff',
   'Auto': '#000000',
   'Moonwell': '#0069d3',
-  '40acres': '#0a5631ff'
+  '40acres': '#0a5631ff',
+  'Dolomite': '#ffffffff'
 }
 
 export const RISK_COLORS: Record<RiskLevel, string> = {
@@ -78,7 +79,8 @@ export const PROTOCOL_URLS: Record<Protocol, string> = {
   'ExtraFi XLend': 'https://xlend.extrafi.io/',
   'Auto': 'https://app.auto.finance/',
   'Moonwell': 'https://moonwell.fi/markets',
-  '40acres': 'https://www.40acres.finance/'
+  '40acres': 'https://www.40acres.finance/',
+  'Dolomite': 'https://app.dolomite.io/earn'
 }
 
 export function getProtocolUrl(protocol: string): string {

@@ -50,7 +50,8 @@ const PROTOCOL_MAPPING: Record<string, string> = {
   'extra-finance-xlend': 'ExtraFi XLend',
   'autofinance': 'Auto',
   'moonwell-lending': 'Moonwell',
-  '40-acres': '40acres'
+  '40-acres': '40acres',
+  'dolomite': 'Dolomite'
 }
 
 const CHAIN_MAPPING: Record<string, string> = {
@@ -73,6 +74,8 @@ const PROTOCOL_URLS: Record<string, string> = {
   'ExtraFi XLend': 'https://xlend.extrafi.io/',
   'Auto': 'https://app.auto.finance/',
   'Moonwell': 'https://moonwell.fi/markets',
+  '40acres': 'https://www.40acres.finance/',
+  'Dolomite': 'https://app.dolomite.io/earn'
 }
 
 function calculateRiskRating(pool: DefiLlamaPool, protocol: string): 'A' | 'B+' | 'B' | 'C+' | 'C' | 'D' {
