@@ -54,8 +54,7 @@ const PROTOCOL_MAPPING: Record<string, string> = {
   'compound': 'Compound V3',
   'spark': 'Spark',
   'spark-lend': 'Spark',
-  'fluid': 'Fluid',
-  'fluid-dex': 'Fluid',
+  'fluid-lending': 'Fluid'
 }
 
 // Chain name mapping
@@ -82,11 +81,11 @@ const PROTOCOL_URLS: Record<string, string> = {
 function calculateRiskRating(pool: DefiLlamaPool, protocol: string): 'A' | 'B+' | 'B' | 'C+' | 'C' | 'D' {
   const tvl = pool.tvlUsd
   const isStablecoin = pool.stablecoin
-  
+
   // Established protocols with high TVL get better ratings
   const establishedProtocols = ['Aave V3', 'Compound V3', 'Spark']
   const isEstablished = establishedProtocols.includes(protocol)
-  
+
   if (tvl > 1_000_000_000 && isEstablished) return 'A'
   if (tvl > 500_000_000 && isEstablished) return 'B+'
   if (tvl > 500_000_000 && isStablecoin) return 'B+'
@@ -99,17 +98,17 @@ function calculateRiskRating(pool: DefiLlamaPool, protocol: string): 'A' | 'B+' 
 // Determine asset type
 function getAssetType(symbol: string, isStablecoin: boolean): TransformedPool['assetType'] {
   if (isStablecoin) return 'Stablecoin'
-  
+
   const lsts = ['STETH', 'WSTETH', 'CBETH', 'RETH', 'SFRXETH', 'ANKRB', 'OSETH']
   const lrts = ['WEETH', 'EZETH', 'RSETH', 'PUFETH', 'METH']
   const blueChips = ['ETH', 'WETH', 'BTC', 'WBTC', 'TBTC', 'AVAX', 'WAVAX', 'MATIC', 'WMATIC']
-  
+
   const upperSymbol = symbol.toUpperCase()
-  
+
   if (lsts.some(lst => upperSymbol.includes(lst))) return 'LST'
   if (lrts.some(lrt => upperSymbol.includes(lrt))) return 'LRT'
   if (blueChips.some(bc => upperSymbol.includes(bc))) return 'Blue Chip'
-  
+
   return 'Volatile'
 }
 
@@ -143,50 +142,50 @@ export async function GET() {
     const response = await fetch('https://yields.llama.fi/pools', {
       next: { revalidate: 300 }
     })
-    
+
     if (!response.ok) {
       throw new Error('Failed to fetch yields data')
     }
-    
+
     const data = await response.json()
     const pools: DefiLlamaPool[] = data.data
-    
+
     // Filter for supported protocols and chains
     const supportedProtocols = Object.keys(PROTOCOL_MAPPING)
     const supportedChains = Object.keys(CHAIN_MAPPING)
-    
+
     const filteredPools = pools.filter(pool => {
       const projectLower = pool.project.toLowerCase()
-      const isSupported = supportedProtocols.some(p => 
+      const isSupported = supportedProtocols.some(p =>
         projectLower === p || projectLower.includes(p.replace('-', ''))
       )
       const isChainSupported = supportedChains.includes(pool.chain)
       const hasMinTvl = pool.tvlUsd > 10_000_000 // Min $10M TVL
-      
+
       return isSupported && isChainSupported && hasMinTvl
     })
-    
+
     // Transform pools to our format
     const transformedPools: TransformedPool[] = filteredPools.map(pool => {
       const projectLower = pool.project.toLowerCase()
-      const protocolKey = supportedProtocols.find(p => 
+      const protocolKey = supportedProtocols.find(p =>
         projectLower === p || projectLower.includes(p.replace('-', ''))
       )
       const protocol = protocolKey ? PROTOCOL_MAPPING[protocolKey] : pool.project
       const chain = CHAIN_MAPPING[pool.chain] || pool.chain
-      
+
       // Clean up symbol
       const symbol = pool.symbol.split('-')[0].replace(/[^A-Za-z0-9]/g, '')
-      
+
       const supplyApy = pool.apy || pool.apyBase || 0
       const borrowApy = pool.apyBaseBorrow || supplyApy * 1.15 // Estimate if not available
-      
-      const utilization = pool.totalSupplyUsd && pool.totalBorrowUsd 
-        ? (pool.totalBorrowUsd / pool.totalSupplyUsd) * 100 
+
+      const utilization = pool.totalSupplyUsd && pool.totalBorrowUsd
+        ? (pool.totalBorrowUsd / pool.totalSupplyUsd) * 100
         : Math.random() * 40 + 50 // Estimate if not available
-      
+
       const poolUrl = PROTOCOL_URLS[protocol] || `https://defillama.com/yields/pool/${pool.pool}`
-      
+
       return {
         id: pool.pool,
         protocol,
@@ -206,15 +205,12 @@ export async function GET() {
         defiLlamaPoolId: pool.pool,
       }
     })
-    
+
     // Sort by TVL descending
     transformedPools.sort((a, b) => b.tvl - a.tvl)
-    
-    // Limit to top 50 pools
-    const topPools = transformedPools.slice(0, 50)
-    
+
     return NextResponse.json({
-      pools: topPools,
+      pools: transformedPools,
       lastUpdated: new Date().toISOString(),
       source: 'DeFiLlama'
     })

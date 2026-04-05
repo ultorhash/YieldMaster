@@ -17,6 +17,7 @@ export default function LendingAggregator() {
   const [selectedAssetTypes, setSelectedAssetTypes] = useState<AssetType[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [minApy, setMinApy] = useState<number | null>(null)
+  const [minTvl, setMinTvl] = useState(2_000_000)
 
   // Data states
   const [pools, setPools] = useState<LendingPool[]>([])
@@ -88,9 +89,11 @@ export default function LendingAggregator() {
         return false
       }
 
+      if (pool.tvl < minTvl) return false
+
       return true
     })
-  }, [pools, selectedChains, selectedProtocols, selectedAssetTypes, searchQuery, minApy])
+  }, [pools, selectedChains, selectedProtocols, selectedAssetTypes, searchQuery, minApy, minTvl])
 
   // Show loading state during initial hydration to prevent mismatch
   if (!mounted) {
@@ -163,6 +166,8 @@ export default function LendingAggregator() {
             setSearchQuery={setSearchQuery}
             minApy={minApy}
             setMinApy={setMinApy}
+            minTvl={minTvl}
+            setMinTvl={setMinTvl}
           />
         </div>
 

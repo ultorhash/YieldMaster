@@ -14,6 +14,34 @@ interface FiltersProps {
   setSearchQuery: (query: string) => void
   minApy: number | null
   setMinApy: (apy: number | null) => void
+  minTvl: number
+  setMinTvl: (tvl: number) => void
+}
+
+function formatTvlLabel(value: number): string {
+  if (value >= 1_000_000_000) return `$${(value / 1_000_000_000).toFixed(1)}B`
+  if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(0)}M`
+  return `$${(value / 1_000).toFixed(0)}K`
+}
+
+// Logarithmic scale: slider 0–100 maps to $2M–$10B
+const SLIDER_MIN = 0
+const SLIDER_MAX = 100
+const TVL_MIN = 2_000_000
+const TVL_MAX = 10_000_000_000
+
+function tvlToSlider(tvl: number): number {
+  const logMin = Math.log10(TVL_MIN)
+  const logMax = Math.log10(TVL_MAX)
+  const logVal = Math.log10(tvl)
+  return Math.round(((logVal - logMin) / (logMax - logMin)) * SLIDER_MAX)
+}
+
+function sliderToTvl(slider: number): number {
+  const logMin = Math.log10(TVL_MIN)
+  const logMax = Math.log10(TVL_MAX)
+  const logVal = logMin + (slider / SLIDER_MAX) * (logMax - logMin)
+  return Math.round(Math.pow(10, logVal))
 }
 
 export function Filters({
@@ -26,7 +54,9 @@ export function Filters({
   searchQuery,
   setSearchQuery,
   minApy,
-  setMinApy
+  setMinApy,
+  minTvl,
+  setMinTvl,
 }: FiltersProps) {
   const toggleChain = (chain: string) => {
     if (selectedChains.includes(chain)) {
@@ -52,6 +82,8 @@ export function Filters({
     }
   }
 
+  const sliderValue = minTvl ? tvlToSlider(minTvl) : 0
+
   return (
     <div className="space-y-4">
       {/* Search bar */}
@@ -75,7 +107,6 @@ export function Filters({
             className="w-36 h-10 px-3 bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary text-sm font-mono"
           />
         </div>
-
       </div>
 
       {/* Filter sections */}
@@ -88,13 +119,12 @@ export function Filters({
               <button
                 key={chain}
                 onClick={() => toggleChain(chain)}
-                className={`px-3 py-1.5 text-xs font-medium border transition-colors cursor-pointer ${
-                  selectedChains.includes(chain)
-                    ? 'bg-primary/10 border-primary text-primary'
-                    : 'bg-card border-border text-muted-foreground hover:border-muted-foreground hover:text-foreground'
-                }`}
+                className={`px-3 py-1.5 text-xs font-medium border transition-colors cursor-pointer ${selectedChains.includes(chain)
+                  ? 'bg-primary/10 border-primary text-primary'
+                  : 'bg-card border-border text-muted-foreground hover:border-muted-foreground hover:text-foreground'
+                  }`}
               >
-                <span 
+                <span
                   className="inline-block w-2 h-2 mr-2"
                   style={{ backgroundColor: CHAIN_COLORS[chain as keyof typeof CHAIN_COLORS] || '#888' }}
                 />
@@ -112,13 +142,12 @@ export function Filters({
               <button
                 key={protocol}
                 onClick={() => toggleProtocol(protocol)}
-                className={`px-3 py-1.5 text-xs font-medium border transition-colors cursor-pointer ${
-                  selectedProtocols.includes(protocol)
-                    ? 'bg-primary/10 border-primary text-primary'
-                    : 'bg-card border-border text-muted-foreground hover:border-muted-foreground hover:text-foreground'
-                }`}
+                className={`px-3 py-1.5 text-xs font-medium border transition-colors cursor-pointer ${selectedProtocols.includes(protocol)
+                  ? 'bg-primary/10 border-primary text-primary'
+                  : 'bg-card border-border text-muted-foreground hover:border-muted-foreground hover:text-foreground'
+                  }`}
               >
-                <span 
+                <span
                   className="inline-block w-2 h-2 mr-2"
                   style={{ backgroundColor: PROTOCOL_COLORS[protocol as keyof typeof PROTOCOL_COLORS] || '#888' }}
                 />
@@ -136,15 +165,55 @@ export function Filters({
               <button
                 key={type}
                 onClick={() => toggleAssetType(type)}
-                className={`px-3 py-1.5 text-xs font-medium border transition-colors cursor-pointer ${
-                  selectedAssetTypes.includes(type)
-                    ? 'bg-primary/10 border-primary text-primary'
-                    : 'bg-card border-border text-muted-foreground hover:border-muted-foreground hover:text-foreground'
-                }`}
+                className={`px-3 py-1.5 text-xs font-medium border transition-colors cursor-pointer ${selectedAssetTypes.includes(type)
+                  ? 'bg-primary/10 border-primary text-primary'
+                  : 'bg-card border-border text-muted-foreground hover:border-muted-foreground hover:text-foreground'
+                  }`}
               >
                 {type}
               </button>
             ))}
+          </div>
+        </div>
+
+        {/* Min TVL slider */}
+        <div className="flex items-start gap-3">
+          <span className="text-xs text-muted-foreground w-20 pt-2 shrink-0">Min TVL</span>
+          <div className="flex-1 space-y-1">
+            <div className="relative h-6 flex items-center">
+              <div className="relative w-full h-px bg-border">
+                <div
+                  className="absolute h-px bg-primary"
+                  style={{ width: `${sliderValue}%` }}
+                />
+              </div>
+              <input
+                type="range"
+                min={SLIDER_MIN}
+                max={SLIDER_MAX}
+                value={sliderValue}
+                onChange={(e) => setMinTvl(sliderToTvl(Number(e.target.value)))}
+                className="absolute w-full appearance-none bg-transparent cursor-pointer
+                  [&::-webkit-slider-thumb]:appearance-none
+                  [&::-webkit-slider-thumb]:w-3
+                  [&::-webkit-slider-thumb]:h-3
+                  [&::-webkit-slider-thumb]:bg-primary
+                  [&::-webkit-slider-thumb]:border
+                  [&::-webkit-slider-thumb]:border-primary
+                  [&::-webkit-slider-thumb]:rounded-none
+                  [&::-moz-range-thumb]:w-3
+                  [&::-moz-range-thumb]:h-3
+                  [&::-moz-range-thumb]:bg-primary
+                  [&::-moz-range-thumb]:border
+                  [&::-moz-range-thumb]:border-primary
+                  [&::-moz-range-thumb]:rounded-none"
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-muted-foreground">{formatTvlLabel(TVL_MIN)}</span>
+              <span className="text-xs font-mono text-primary">{formatTvlLabel(minTvl)}</span>
+              <span className="text-xs text-muted-foreground">{formatTvlLabel(TVL_MAX)}</span>
+            </div>
           </div>
         </div>
       </div>
