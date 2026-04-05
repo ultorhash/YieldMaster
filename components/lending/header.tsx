@@ -15,7 +15,9 @@ export function Header({ onRefresh, isLoading, lastUpdated }: HeaderProps) {
 
   useEffect(() => {
     if (lastUpdated) {
-      setFormattedTime(lastUpdated.toLocaleTimeString('en-US'))
+      setFormattedTime(
+        lastUpdated.toLocaleTimeString('en-US', { timeZone: 'UTC' }) + ' UTC'
+      )
     }
   }, [lastUpdated])
 
