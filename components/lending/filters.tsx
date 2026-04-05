@@ -2,6 +2,7 @@
 
 import { CHAINS, PROTOCOLS, ASSET_TYPES, AssetType, CHAIN_COLORS, PROTOCOL_COLORS } from '@/lib/lending-data'
 import { Search } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
 interface FiltersProps {
   selectedChains: string[]
@@ -18,17 +19,26 @@ interface FiltersProps {
   setMinTvl: (tvl: number) => void
 }
 
+// Logarithmic scale: slider 0–100 maps to $10K–$10B
+const SLIDER_MIN = 0
+const SLIDER_MAX = 100
+const TVL_MIN = 10_000
+const TVL_MAX = 10_000_000_000
+
+function useDebounce<T>(value: T, delay: number): T {
+  const [debounced, setDebounced] = useState(value)
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(value), delay)
+    return () => clearTimeout(timer)
+  }, [value, delay])
+  return debounced
+}
+
 function formatTvlLabel(value: number): string {
   if (value >= 1_000_000_000) return `$${(value / 1_000_000_000).toFixed(1)}B`
   if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(0)}M`
   return `$${(value / 1_000).toFixed(0)}K`
 }
-
-// Logarithmic scale: slider 0–100 maps to $2M–$10B
-const SLIDER_MIN = 0
-const SLIDER_MAX = 100
-const TVL_MIN = 10_000
-const TVL_MAX = 10_000_000_000
 
 function tvlToSlider(tvl: number): number {
   const logMin = Math.log10(TVL_MIN)
@@ -82,7 +92,14 @@ export function Filters({
     }
   }
 
-  const sliderValue = minTvl ? tvlToSlider(minTvl) : 0
+  const [localTvl, setLocalTvl] = useState(minTvl)
+  const debouncedTvl = useDebounce(localTvl, 300)
+
+  useEffect(() => {
+    setMinTvl(debouncedTvl)
+  }, [debouncedTvl, setMinTvl])
+
+  const sliderValue = localTvl ? tvlToSlider(localTvl) : 0
 
   return (
     <div className="space-y-4">
@@ -192,7 +209,7 @@ export function Filters({
                 min={SLIDER_MIN}
                 max={SLIDER_MAX}
                 value={sliderValue}
-                onChange={(e) => setMinTvl(sliderToTvl(Number(e.target.value)))}
+                onChange={(e) => setLocalTvl(sliderToTvl(Number(e.target.value)))}
                 className="absolute w-full appearance-none bg-transparent cursor-pointer
                   [&::-webkit-slider-thumb]:appearance-none
                   [&::-webkit-slider-thumb]:w-3
@@ -211,7 +228,7 @@ export function Filters({
             </div>
             <div className="flex items-center justify-between">
               <span className="text-xs text-muted-foreground">{formatTvlLabel(TVL_MIN)}</span>
-              <span className="text-xs font-mono text-primary">{formatTvlLabel(minTvl)}</span>
+              <span className="text-xs font-mono text-primary">{formatTvlLabel(localTvl)}</span>
               <span className="text-xs text-muted-foreground">{formatTvlLabel(TVL_MAX)}</span>
             </div>
           </div>
