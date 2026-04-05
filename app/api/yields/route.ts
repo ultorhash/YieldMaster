@@ -46,12 +46,9 @@ export interface TransformedPool {
 const PROTOCOL_MAPPING: Record<string, string> = {
   'aave-v3': 'Aave V3',
   'aave-v4': 'Aave V4',
-  'morpho-blue': 'Morpho',
   'morpho-v1': 'Morpho',
-  'euler': 'Euler',
   'euler-v2': 'Euler',
   'compound-v3': 'Compound V3',
-  'compound': 'Compound V3',
   'spark-savings': 'Spark',
   'sparklend': 'Spark',
   'fluid-lending': 'Fluid'
@@ -102,7 +99,7 @@ function getAssetType(symbol: string, isStablecoin: boolean): TransformedPool['a
 
   const lsts = ['STETH', 'WSTETH', 'CBETH', 'RETH', 'SFRXETH', 'ANKRB', 'OSETH']
   const lrts = ['WEETH', 'EZETH', 'RSETH', 'PUFETH', 'METH']
-  const blueChips = ['ETH', 'WETH', 'BTC', 'WBTC', 'TBTC', 'AVAX', 'WAVAX', 'MATIC', 'WMATIC']
+  const blueChips = ['ETH', 'WETH', 'BTC', 'WBTC']
 
   const upperSymbol = symbol.toUpperCase()
 

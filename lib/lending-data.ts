@@ -1,7 +1,12 @@
-export type Chain = 'Ethereum' | 'Arbitrum' | 'Base' | 'Optimism' | 'Polygon' | 'Avalanche'
-export type Protocol = 'Aave V3' | 'Aave V4' | 'Morpho' | 'Euler' | 'Compound V3' | 'Spark' | 'Fluid'
-export type RiskLevel = 'A' | 'B+' | 'B' | 'C+' | 'C' | 'D'
-export type AssetType = 'Stablecoin' | 'Blue Chip' | 'LST' | 'LRT' | 'Volatile'
+export const CHAINS = ['Ethereum', 'Arbitrum', 'Base', 'Optimism', 'Polygon', 'Avalanche'] as const
+export const PROTOCOLS = ['Aave V3', 'Aave V4', 'Morpho', 'Euler', 'Compound V3', 'Spark', 'Fluid'] as const
+export const ASSET_TYPES = ['Stablecoin', 'Blue Chip', 'LST', 'LRT', 'Volatile'] as const
+export const RISK_LEVELS = ['A', 'B+', 'B', 'C+', 'C', 'D'] as const
+
+export type Chain = typeof CHAINS[number]
+export type Protocol = typeof PROTOCOLS[number]
+export type AssetType = typeof ASSET_TYPES[number]
+export type RiskLevel = typeof RISK_LEVELS[number]
 
 export interface VaultComposition {
   asset: string
@@ -29,10 +34,6 @@ export interface LendingPool {
   poolUrl?: string
   defiLlamaPoolId?: string
 }
-
-export const CHAINS: Chain[] = ['Ethereum', 'Arbitrum', 'Base', 'Optimism', 'Polygon', 'Avalanche']
-export const PROTOCOLS: Protocol[] = ['Aave V3', 'Aave V4', 'Morpho', 'Euler', 'Compound V3', 'Spark', 'Fluid']
-export const ASSET_TYPES: AssetType[] = ['Stablecoin', 'Blue Chip', 'LST', 'LRT', 'Volatile']
 
 export const CHAIN_COLORS: Record<Chain, string> = {
   'Ethereum': '#627EEA',
@@ -62,7 +63,6 @@ export const RISK_COLORS: Record<RiskLevel, string> = {
   'D': '#DC2626'
 }
 
-// Protocol app URLs
 export const PROTOCOL_URLS: Record<Protocol, string> = {
   'Aave V3': 'https://app.aave.com/',
   'Aave V4': 'https://pro.aave.com/',
@@ -73,18 +73,13 @@ export const PROTOCOL_URLS: Record<Protocol, string> = {
   'Fluid': 'https://fluid.io/lending/1',
 }
 
-// Helper to generate protocol URLs
-export function getProtocolUrl(protocol: string, chain: string, asset: string): string {
-  return PROTOCOL_URLS[protocol as Protocol] || `https://defillama.com/protocol/${protocol.toLowerCase().replace(/\s+/g, '-')}`
+export function getProtocolUrl(protocol: string): string {
+  return PROTOCOL_URLS[protocol as Protocol] ?? `https://defillama.com/protocol/${protocol.toLowerCase().replace(/\s+/g, '-')}`
 }
 
 export function formatTVL(tvl: number): string {
-  if (tvl >= 1_000_000_000) {
-    return `$${(tvl / 1_000_000_000).toFixed(2)}B`
-  }
-  if (tvl >= 1_000_000) {
-    return `$${(tvl / 1_000_000).toFixed(0)}M`
-  }
+  if (tvl >= 1_000_000_000) return `$${(tvl / 1_000_000_000).toFixed(2)}B`
+  if (tvl >= 1_000_000) return `$${(tvl / 1_000_000).toFixed(0)}M`
   return `$${(tvl / 1_000).toFixed(0)}K`
 }
 
