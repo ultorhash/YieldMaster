@@ -5,7 +5,7 @@ import { LendingPool, formatTVL, formatAPY, CHAIN_COLORS, PROTOCOL_COLORS, RISK_
 import { ChevronUp, ChevronDown, Info, Shield, ShieldCheck, ExternalLink, Bug } from 'lucide-react'
 import { PoolDetailModal } from './pool-detail-modal'
 
-type SortKey = 'asset' | 'protocol' | 'chain' | 'supplyApy' | 'borrowApy' | 'tvl' | 'utilization' | 'riskRating'
+type SortKey = 'asset' | 'protocol' | 'chain' | 'supplyApy' | 'tvl' | 'riskRating'
 type SortDirection = 'asc' | 'desc'
 
 interface PoolTableProps {
@@ -53,22 +53,7 @@ const PoolRow = memo(function PoolRow({ pool, index, onSelect }: PoolRowProps) {
         <span className="font-mono text-primary font-medium">{formatAPY(pool.supplyApy)}</span>
       </td>
       <td className="p-4 text-right">
-        <span className="font-mono text-muted-foreground">
-          {pool.borrowApy > 0 ? formatAPY(pool.borrowApy) : '—'}
-        </span>
-      </td>
-      <td className="p-4 text-right">
         <span className="font-mono text-sm text-foreground">{formatTVL(pool.tvl)}</span>
-      </td>
-      <td className="p-4 text-right">
-        <div className="flex items-center justify-end gap-2">
-          <div className="w-16 h-1.5 bg-muted overflow-hidden">
-            <div className="h-full bg-primary/70" style={{ width: `${Math.min(pool.utilization, 100)}%` }} />
-          </div>
-          <span className="font-mono text-xs text-muted-foreground w-12 text-right">
-            {pool.utilization.toFixed(1)}%
-          </span>
-        </div>
       </td>
       <td className="p-4 text-center">
         <span
@@ -136,9 +121,7 @@ export function PoolTable({ pools }: PoolTableProps) {
         case 'protocol': comparison = a.protocol.localeCompare(b.protocol); break
         case 'chain': comparison = a.chain.localeCompare(b.chain); break
         case 'supplyApy': comparison = a.supplyApy - b.supplyApy; break
-        case 'borrowApy': comparison = a.borrowApy - b.borrowApy; break
         case 'tvl': comparison = a.tvl - b.tvl; break
-        case 'utilization': comparison = a.utilization - b.utilization; break
         case 'riskRating': comparison = riskOrder[a.riskRating] - riskOrder[b.riskRating]; break
       }
       return sortDirection === 'asc' ? comparison : -comparison
@@ -198,9 +181,7 @@ export function PoolTable({ pools }: PoolTableProps) {
                 <SortTh label="Protocol" sortKeyName="protocol" />
                 <SortTh label="Chain" sortKeyName="chain" />
                 <SortTh label="Supply APY" sortKeyName="supplyApy" align="right" />
-                <SortTh label="Borrow APY" sortKeyName="borrowApy" align="right" />
                 <SortTh label="TVL" sortKeyName="tvl" align="right" />
-                <SortTh label="Utilization" sortKeyName="utilization" align="right" />
                 <SortTh label="Risk" sortKeyName="riskRating" align="center" />
                 <th className="p-4 text-center">
                   <span className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Info</span>

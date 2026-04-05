@@ -9,14 +9,11 @@ interface StatsCardsProps {
 
 export function StatsCards({ pools }: StatsCardsProps) {
   const totalTVL = pools.reduce((sum, pool) => sum + pool.tvl, 0)
-  const avgSupplyApy = pools.length > 0 
-    ? pools.reduce((sum, pool) => sum + pool.supplyApy, 0) / pools.length 
+  const avgSupplyApy = pools.length > 0
+    ? pools.reduce((sum, pool) => sum + pool.supplyApy, 0) / pools.length
     : 0
-  const maxSupplyApy = pools.length > 0 
+  const maxSupplyApy = pools.length > 0
     ? Math.max(...pools.map(pool => pool.supplyApy))
-    : 0
-  const avgUtilization = pools.length > 0
-    ? pools.reduce((sum, pool) => sum + pool.utilization, 0) / pools.length
     : 0
 
   const stats = [
@@ -37,19 +34,13 @@ export function StatsCards({ pools }: StatsCardsProps) {
       value: `${maxSupplyApy.toFixed(2)}%`,
       icon: Layers,
       description: 'Best offer'
-    },
-    {
-      label: 'Avg. Utilization',
-      value: `${avgUtilization.toFixed(1)}%`,
-      icon: Activity,
-      description: 'Utilization rate'
     }
   ]
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-3 lg:grid-cols-3 gap-4">
       {stats.map((stat, index) => (
-        <div 
+        <div
           key={index}
           className="bg-card border border-border p-4 lg:p-5"
         >

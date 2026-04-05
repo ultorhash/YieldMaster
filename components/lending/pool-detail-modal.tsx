@@ -66,24 +66,14 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
         {/* Content */}
         <div className="p-6 space-y-6">
           {/* Key Metrics */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
             <div className="bg-muted/30 p-4">
               <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Supply APY</p>
               <p className="text-2xl font-mono font-bold text-primary">{formatAPY(pool.supplyApy)}</p>
             </div>
             <div className="bg-muted/30 p-4">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Borrow APY</p>
-              <p className="text-2xl font-mono font-bold text-foreground">
-                {pool.borrowApy > 0 ? formatAPY(pool.borrowApy) : '—'}
-              </p>
-            </div>
-            <div className="bg-muted/30 p-4">
               <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">TVL</p>
               <p className="text-2xl font-mono font-bold text-foreground">{formatTVL(pool.tvl)}</p>
-            </div>
-            <div className="bg-muted/30 p-4">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Utilization</p>
-              <p className="text-2xl font-mono font-bold text-foreground">{pool.utilization.toFixed(1)}%</p>
             </div>
           </div>
 

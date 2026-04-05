@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-export const revalidate = 300 // Revalidate every 5 minutes
+export const revalidate = 300
 
 interface DefiLlamaPool {
   chain: string
@@ -16,8 +16,6 @@ interface DefiLlamaPool {
   exposure: string
   poolMeta: string | null
   underlyingTokens: string[]
-  apyBaseBorrow?: number | null
-  apyRewardBorrow?: number | null
   totalSupplyUsd?: number
   totalBorrowUsd?: number
   ltv?: number
@@ -30,9 +28,7 @@ export interface TransformedPool {
   asset: string
   assetType: 'Stablecoin' | 'Blue Chip' | 'LST' | 'LRT' | 'Volatile'
   supplyApy: number
-  borrowApy: number
   tvl: number
-  utilization: number
   riskRating: 'A' | 'B+' | 'B' | 'C+' | 'C' | 'D'
   description: string
   audited: boolean
@@ -42,7 +38,6 @@ export interface TransformedPool {
   vaultComposition?: { asset: string; percentage: number; color: string }[]
 }
 
-// Protocol name mapping from DeFiLlama to display name
 const PROTOCOL_MAPPING: Record<string, string> = {
   'aave-v3': 'Aave V3',
   'aave-v4': 'Aave V4',
@@ -56,7 +51,6 @@ const PROTOCOL_MAPPING: Record<string, string> = {
   'autofinance': 'Auto'
 }
 
-// Chain name mapping
 const CHAIN_MAPPING: Record<string, string> = {
   'Ethereum': 'Ethereum',
   'Arbitrum': 'Arbitrum',
@@ -66,7 +60,6 @@ const CHAIN_MAPPING: Record<string, string> = {
   'Avalanche': 'Avalanche',
 }
 
-// Static protocol URLs - no dynamic mapping based on chain/asset
 const PROTOCOL_URLS: Record<string, string> = {
   'Aave V3': 'https://app.aave.com/',
   'Aave V4': 'https://pro.aave.com/',
@@ -79,12 +72,9 @@ const PROTOCOL_URLS: Record<string, string> = {
   'Auto': 'https://app.auto.finance/'
 }
 
-// Risk rating based on TVL, audit status, and protocol maturity
 function calculateRiskRating(pool: DefiLlamaPool, protocol: string): 'A' | 'B+' | 'B' | 'C+' | 'C' | 'D' {
   const tvl = pool.tvlUsd
   const isStablecoin = pool.stablecoin
-
-  // Established protocols with high TVL get better ratings
   const establishedProtocols = ['Aave V3', 'Compound V3', 'Spark']
   const isEstablished = establishedProtocols.includes(protocol)
 
@@ -97,33 +87,20 @@ function calculateRiskRating(pool: DefiLlamaPool, protocol: string): 'A' | 'B+' 
   return 'D'
 }
 
-// Determine asset type
 function getAssetType(symbol: string, isStablecoin: boolean): TransformedPool['assetType'] {
   if (isStablecoin) return 'Stablecoin'
-
   const lsts = ['STETH', 'WSTETH', 'CBETH', 'RETH', 'SFRXETH', 'ANKRB', 'OSETH']
   const lrts = ['WEETH', 'EZETH', 'RSETH', 'PUFETH', 'METH']
   const blueChips = ['ETH', 'WETH', 'BTC', 'WBTC']
-
   const upperSymbol = symbol.toUpperCase()
-
   if (lsts.some(lst => upperSymbol.includes(lst))) return 'LST'
   if (lrts.some(lrt => upperSymbol.includes(lrt))) return 'LRT'
   if (blueChips.some(bc => upperSymbol.includes(bc))) return 'Blue Chip'
-
   return 'Volatile'
 }
 
-// Check if protocol is audited
-function isProtocolAudited(protocol: string): boolean {
-  // All major protocols we track are audited
-  return true
-}
-
-// Check insurance coverage
 function hasInsuranceCoverage(protocol: string): boolean {
-  const insured = ['Aave V3', 'Compound V3', 'Spark']
-  return insured.includes(protocol)
+  return ['Aave V3', 'Compound V3', 'Spark'].includes(protocol)
 }
 
 export async function GET() {
@@ -132,43 +109,26 @@ export async function GET() {
       next: { revalidate: 300 }
     })
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch yields data')
-    }
+    if (!response.ok) throw new Error('Failed to fetch yields data')
 
     const data = await response.json()
     const pools: DefiLlamaPool[] = data.data
-
-    const aaveV4 = pools.filter(p => p.project.includes('aave'))
-    console.log('Aave slugs:', [...new Set(aaveV4.map(p => p.project))])
-
-    // Filter for supported chains
     const supportedChains = Object.keys(CHAIN_MAPPING)
 
     const filteredPools = pools.filter(pool => {
-      const isSupported = pool.project in PROTOCOL_MAPPING
-      const isChainSupported = supportedChains.includes(pool.chain)
-      const hasMinTvl = pool.tvlUsd > 10_000
-      const hasApy = pool.apy > 0.01
-
-      return isSupported && isChainSupported && hasMinTvl && hasApy
+      return (
+        pool.project in PROTOCOL_MAPPING &&
+        supportedChains.includes(pool.chain) &&
+        pool.tvlUsd > 10_000 &&
+        pool.apy > 0.01
+      )
     })
 
-    // Transform pools to our format
     const transformedPools: TransformedPool[] = filteredPools.map(pool => {
       const protocol = PROTOCOL_MAPPING[pool.project]
       const chain = CHAIN_MAPPING[pool.chain] || pool.chain
-
-      // Clean up symbol
       const symbol = pool.symbol.split('-')[0].replace(/[^A-Za-z0-9]/g, '')
-
       const supplyApy = pool.apy || pool.apyBase || 0
-      const borrowApy = pool.apyBaseBorrow || supplyApy * 1.15 // Estimate if not available
-
-      const utilization = pool.totalSupplyUsd && pool.totalBorrowUsd
-        ? (pool.totalBorrowUsd / pool.totalSupplyUsd) * 100
-        : Math.random() * 40 + 50 // Estimate if not available
-
       const poolUrl = PROTOCOL_URLS[protocol] || `https://defillama.com/yields/pool/${pool.pool}`
 
       return {
@@ -178,19 +138,16 @@ export async function GET() {
         asset: symbol,
         assetType: getAssetType(symbol, pool.stablecoin),
         supplyApy: Math.round(supplyApy * 100) / 100,
-        borrowApy: Math.round(borrowApy * 100) / 100,
         tvl: pool.tvlUsd,
-        utilization: Math.round(utilization * 10) / 10,
         riskRating: calculateRiskRating(pool, protocol),
         description: `${symbol} lending pool on ${protocol} (${chain}). TVL: $${(pool.tvlUsd / 1_000_000).toFixed(0)}M.`,
-        audited: isProtocolAudited(protocol),
+        audited: true,
         insuranceCoverage: hasInsuranceCoverage(protocol),
         poolUrl,
         defiLlamaPoolId: pool.pool,
       }
     })
 
-    // Sort by TVL descending
     transformedPools.sort((a, b) => b.tvl - a.tvl)
 
     return NextResponse.json({
@@ -200,9 +157,6 @@ export async function GET() {
     })
   } catch (error) {
     console.error('Error fetching yields:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch yields data' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch yields data' }, { status: 500 })
   }
 }
