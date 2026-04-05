@@ -7,7 +7,7 @@ export const CHAINS = [
 export const PROTOCOLS = [
   'Aave V3', 'Aave V4', 'Morpho', 'Euler', 'Compound V3', 'Spark', 'Fluid',
   'ExtraFi XLend', 'Auto', 'Moonwell', '40acres', 'Dolomite', 'HyperLend',
-  'HypurrFi', 'Kamino', 'Save'
+  'HypurrFi', 'Kamino', 'Save', 'Loopscale'
 ] as const
 
 export type Chain = typeof CHAINS[number]
@@ -88,7 +88,8 @@ export const PROTOCOL_COLORS: Record<Protocol, string> = {
   'HyperLend': '#13584E',
   'HypurrFi': '#A8E11A',
   'Kamino': '#272F7D',
-  'Save': '#FF4F0F'
+  'Save': '#FF4F0F',
+  'Loopscale': '#018CE2'
 }
 
 export const PROTOCOL_MAPPING: Record<string, string> = {
@@ -109,7 +110,8 @@ export const PROTOCOL_MAPPING: Record<string, string> = {
   'hypurrfi-isolated': 'HypurrFi',
   'hypurrfi-pooled': 'HypurrFi',
   'kamino-lend': 'Kamino',
-  'save': 'Save'
+  'save': 'Save',
+  'loopscale': 'Loopscale'
 }
 
 export const PROTOCOL_URLS: Record<Protocol, string> = {
@@ -128,7 +130,8 @@ export const PROTOCOL_URLS: Record<Protocol, string> = {
   'HyperLend': 'https://app.hyperlend.finance/markets',
   'HypurrFi': 'https://hypurrfi.com/lend',
   'Kamino': 'https://kamino.com/lend',
-  'Save': 'https://save.finance/'
+  'Save': 'https://save.finance/',
+  'Loopscale': 'https://app.loopscale.com/lend'
 }
 
 export function getProtocolUrl(protocol: string): string {
