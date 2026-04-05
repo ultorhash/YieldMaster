@@ -2,12 +2,12 @@ export const ASSET_TYPES = ['Stablecoin', 'Blue Chip', 'LST', 'LRT', 'Volatile']
 export const RISK_LEVELS = ['A', 'B+', 'B', 'C+', 'C', 'D'] as const
 export const CHAINS = [
   'Ethereum', 'Arbitrum', 'Base', 'Optimism', 'Polygon', 'Avalanche',
-  'HyperEVM', 'Solana'
+  'HyperEVM', 'Solana', 'Sui'
 ] as const
 export const PROTOCOLS = [
   'Aave V3', 'Aave V4', 'Morpho', 'Euler', 'Compound V3', 'Spark', 'Fluid',
   'ExtraFi XLend', 'Auto', 'Moonwell', '40acres', 'Dolomite', 'HyperLend',
-  'HypurrFi', 'Kamino', 'Save', 'Loopscale'
+  'HypurrFi', 'Kamino', 'Save', 'Loopscale', 'Navi', 'Scallop'
 ] as const
 
 export type Chain = typeof CHAINS[number]
@@ -40,7 +40,6 @@ export interface LendingPool {
   defiLlamaPoolId?: string
 }
 
-
 export const RISK_COLORS: Record<RiskLevel, string> = {
   'A': '#22C55E',
   'B+': '#84CC16',
@@ -58,7 +57,8 @@ export const CHAIN_COLORS: Record<Chain, string> = {
   'Polygon': '#8247E5',
   'Avalanche': '#E84142',
   'HyperEVM': '#0F3933',
-  'Solana': '#00FFA3'
+  'Solana': '#00FFA3',
+  'Sui': '#4DA2FF'
 }
 
 export const CHAIN_MAPPING: Record<string, string> = {
@@ -69,17 +69,18 @@ export const CHAIN_MAPPING: Record<string, string> = {
   'Polygon': 'Polygon',
   'Avalanche': 'Avalanche',
   'Hyperliquid L1': 'HyperEVM',
-  'Solana': 'Solana'
+  'Solana': 'Solana',
+  'Sui': 'Sui'
 }
 
 export const PROTOCOL_COLORS: Record<Protocol, string> = {
-  'Aave V3': '#B6509E',
+  'Aave V3': '#A463AF',
   'Aave V4': '#9D0AFF',
   'Morpho': '#1E88E5',
   'Euler': '#E6007A',
   'Compound V3': '#00D395',
   'Spark': '#F7931A',
-  'Fluid': '#6366F1',
+  'Fluid': '#0A3898',
   'ExtraFi XLend': '#5052C9',
   'Auto': '#000000',
   'Moonwell': '#0069D3',
@@ -89,7 +90,9 @@ export const PROTOCOL_COLORS: Record<Protocol, string> = {
   'HypurrFi': '#A8E11A',
   'Kamino': '#272F7D',
   'Save': '#FF4F0F',
-  'Loopscale': '#018CE2'
+  'Loopscale': '#018CE2',
+  'Navi': '#0DC3A4',
+  'Scallop': '#F1D6C8'
 }
 
 export const PROTOCOL_MAPPING: Record<string, string> = {
@@ -111,7 +114,9 @@ export const PROTOCOL_MAPPING: Record<string, string> = {
   'hypurrfi-pooled': 'HypurrFi',
   'kamino-lend': 'Kamino',
   'save': 'Save',
-  'loopscale': 'Loopscale'
+  'loopscale': 'Loopscale',
+  'navi-lending': 'Navi',
+  'scallop-lend': 'Scallop'
 }
 
 export const PROTOCOL_URLS: Record<Protocol, string> = {
@@ -131,7 +136,9 @@ export const PROTOCOL_URLS: Record<Protocol, string> = {
   'HypurrFi': 'https://hypurrfi.com/lend',
   'Kamino': 'https://kamino.com/lend',
   'Save': 'https://save.finance/',
-  'Loopscale': 'https://app.loopscale.com/lend'
+  'Loopscale': 'https://app.loopscale.com/lend',
+  'Navi': 'https://app.naviprotocol.io/',
+  'Scallop': 'https://app.scallop.io/'
 }
 
 export function getProtocolUrl(protocol: string): string {
