@@ -5,11 +5,7 @@ import { Header } from '@/components/lending/header'
 import { Filters } from '@/components/lending/filters'
 import { PoolTable } from '@/components/lending/pool-table'
 import { StatsCards } from '@/components/lending/stats-cards'
-import {
-  mockLendingPools,
-  AssetType,
-  LendingPool
-} from '@/lib/lending-data'
+import { AssetType, LendingPool } from '@/lib/lending-data'
 
 export default function LendingAggregator() {
   // Mounted state to prevent hydration mismatch from browser extensions
@@ -40,9 +36,6 @@ export default function LendingAggregator() {
       setLastUpdated(new Date(data.lastUpdated))
       setDataSource('live')
     } catch (error) {
-      console.error('[v0] Failed to fetch live data, using fallback:', error)
-      // Fallback to mock data if API fails
-      setPools(mockLendingPools)
       setLastUpdated(new Date())
       setDataSource('fallback')
     } finally {
