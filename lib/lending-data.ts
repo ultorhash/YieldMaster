@@ -6,8 +6,9 @@ export const CHAINS = [
 ] as const
 export const PROTOCOLS = [
   'Aave V3', 'Aave V4', 'Morpho', 'Euler', 'Compound V3', 'Spark', 'Fluid',
-  'ExtraFi XLend', 'Auto', 'Moonwell', '40acres', 'Dolomite', 'YO', 'HyperLend',
-  'HypurrFi', 'Kamino', 'Save', 'Project Φ', 'Loopscale', 'Navi', 'Scallop'
+  'ExtraFi XLend', 'Auto', 'Moonwell', '40acres', 'Dolomite', 'Flux', 'YO',
+  'HyperLend', 'HypurrFi', 'Kamino', 'Save', 'Project Φ', 'Loopscale', 'Navi',
+  'Scallop'
 ] as const
 
 export type Chain = typeof CHAINS[number]
@@ -86,6 +87,7 @@ export const PROTOCOL_COLORS: Record<Protocol, string> = {
   'Moonwell': '#0069D3',
   '40acres': '#0A5631',
   'Dolomite': '#FFFFFF',
+  'Flux': '#757575',
   'YO': '#D6FF34',
   'HyperLend': '#13584E',
   'HypurrFi': '#A8E11A',
@@ -94,7 +96,7 @@ export const PROTOCOL_COLORS: Record<Protocol, string> = {
   'Project Φ': '#9658E6',
   'Loopscale': '#018CE2',
   'Navi': '#0DC3A4',
-  'Scallop': '#F1D6C8'
+  'Scallop': '#F1D6C8',
 }
 
 export const PROTOCOL_MAPPING: Record<string, string> = {
@@ -111,6 +113,7 @@ export const PROTOCOL_MAPPING: Record<string, string> = {
   'moonwell-lending': 'Moonwell',
   '40-acres': '40acres',
   'dolomite': 'Dolomite',
+  'flux-finance': 'Flux',
   'yo-protocol': 'YO',
   'hyperlend-pooled': 'HyperLend',
   'hypurrfi-isolated': 'HypurrFi',
@@ -136,6 +139,7 @@ export const PROTOCOL_URLS: Record<Protocol, string> = {
   'Moonwell': 'https://moonwell.fi/markets',
   '40acres': 'https://www.40acres.finance/',
   'Dolomite': 'https://app.dolomite.io/earn',
+  'Flux': 'https://fluxfinance.com/lend',
   'YO': 'https://app.yo.xyz/',
   'HyperLend': 'https://app.hyperlend.finance/markets',
   'HypurrFi': 'https://hypurrfi.com/lend',
