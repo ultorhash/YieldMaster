@@ -2,12 +2,12 @@ export const ASSET_TYPES = ['Stablecoin', 'Blue Chip', 'LST', 'LRT', 'Volatile']
 export const RISK_LEVELS = ['A', 'B+', 'B', 'C+', 'C', 'D'] as const
 export const CHAINS = [
   'Ethereum', 'Arbitrum', 'Base', 'Optimism', 'Polygon', 'Avalanche',
-  'HyperEVM'
+  'HyperEVM', 'Solana'
 ] as const
 export const PROTOCOLS = [
   'Aave V3', 'Aave V4', 'Morpho', 'Euler', 'Compound V3', 'Spark', 'Fluid',
   'ExtraFi XLend', 'Auto', 'Moonwell', '40acres', 'Dolomite', 'HyperLend',
-  'HypurrFi'
+  'HypurrFi', 'Kamino'
 ] as const
 
 export type Chain = typeof CHAINS[number]
@@ -40,6 +40,16 @@ export interface LendingPool {
   defiLlamaPoolId?: string
 }
 
+
+export const RISK_COLORS: Record<RiskLevel, string> = {
+  'A': '#22C55E',
+  'B+': '#84CC16',
+  'B': '#EAB308',
+  'C+': '#F97316',
+  'C': '#EF4444',
+  'D': '#DC2626'
+}
+
 export const CHAIN_COLORS: Record<Chain, string> = {
   'Ethereum': '#627EEA',
   'Arbitrum': '#28A0F0',
@@ -47,7 +57,19 @@ export const CHAIN_COLORS: Record<Chain, string> = {
   'Optimism': '#FF0420',
   'Polygon': '#8247E5',
   'Avalanche': '#E84142',
-  'HyperEVM': '#0F3933'
+  'HyperEVM': '#0F3933',
+  'Solana': '#00FFA3'
+}
+
+export const CHAIN_MAPPING: Record<string, string> = {
+  'Ethereum': 'Ethereum',
+  'Arbitrum': 'Arbitrum',
+  'Base': 'Base',
+  'Optimism': 'Optimism',
+  'Polygon': 'Polygon',
+  'Avalanche': 'Avalanche',
+  'Hyperliquid L1': 'HyperEVM',
+  'Solana': 'Solana'
 }
 
 export const PROTOCOL_COLORS: Record<Protocol, string> = {
@@ -64,26 +86,8 @@ export const PROTOCOL_COLORS: Record<Protocol, string> = {
   '40acres': '#0A5631',
   'Dolomite': '#FFFFFF',
   'HyperLend': '#13584E',
-  'HypurrFi': '#A8E11A'
-}
-
-export const RISK_COLORS: Record<RiskLevel, string> = {
-  'A': '#22C55E',
-  'B+': '#84CC16',
-  'B': '#EAB308',
-  'C+': '#F97316',
-  'C': '#EF4444',
-  'D': '#DC2626'
-}
-
-export const CHAIN_MAPPING: Record<string, string> = {
-  'Ethereum': 'Ethereum',
-  'Arbitrum': 'Arbitrum',
-  'Base': 'Base',
-  'Optimism': 'Optimism',
-  'Polygon': 'Polygon',
-  'Avalanche': 'Avalanche',
-  'Hyperliquid L1': 'HyperEVM'
+  'HypurrFi': '#A8E11A',
+  'Kamino': '#272F7D'
 }
 
 export const PROTOCOL_MAPPING: Record<string, string> = {
@@ -102,7 +106,8 @@ export const PROTOCOL_MAPPING: Record<string, string> = {
   'dolomite': 'Dolomite',
   'hyperlend-pooled': 'HyperLend',
   'hypurrfi-isolated': 'HypurrFi',
-  'hypurrfi-pooled': 'HypurrFi'
+  'hypurrfi-pooled': 'HypurrFi',
+  'kamino-lend': 'Kamino'
 }
 
 export const PROTOCOL_URLS: Record<Protocol, string> = {
@@ -119,7 +124,8 @@ export const PROTOCOL_URLS: Record<Protocol, string> = {
   '40acres': 'https://www.40acres.finance/',
   'Dolomite': 'https://app.dolomite.io/earn',
   'HyperLend': 'https://app.hyperlend.finance/markets',
-  'HypurrFi': 'https://hypurrfi.com/lend'
+  'HypurrFi': 'https://hypurrfi.com/lend',
+  'Kamino': 'https://kamino.com/lend'
 }
 
 export function getProtocolUrl(protocol: string): string {
