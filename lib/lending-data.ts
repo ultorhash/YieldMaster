@@ -22,7 +22,6 @@ export interface LendingPool {
   riskRating: RiskLevel
   vaultComposition?: VaultComposition[]
   description: string
-  oracleSource: string
   audited: boolean
   insuranceCoverage: boolean
   hadExploit: boolean

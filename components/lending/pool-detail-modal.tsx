@@ -85,12 +85,6 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
             </div>
           </div>
 
-          {/* Description */}
-          <div>
-            <h3 className="text-sm font-medium text-foreground mb-2 uppercase tracking-wider">Description</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">{pool.description}</p>
-          </div>
-
           {/* Vault Composition */}
           {pool.vaultComposition && pool.vaultComposition.length > 0 && (
             <div>
@@ -184,13 +178,6 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
                   </div>
                 </div>
               )}
-
-              <div className="pt-2 border-t border-border">
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="text-muted-foreground">Oracle Source:</span>
-                  <span className="text-foreground font-mono">{pool.oracleSource}</span>
-                </div>
-              </div>
             </div>
           </div>
 

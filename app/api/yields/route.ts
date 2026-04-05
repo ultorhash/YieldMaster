@@ -35,7 +35,6 @@ export interface TransformedPool {
   utilization: number
   riskRating: 'A' | 'B+' | 'B' | 'C+' | 'C' | 'D'
   description: string
-  oracleSource: string
   audited: boolean
   insuranceCoverage: boolean
   poolUrl: string
@@ -114,20 +113,6 @@ function getAssetType(symbol: string, isStablecoin: boolean): TransformedPool['a
   return 'Volatile'
 }
 
-// Get oracle source based on protocol
-function getOracleSource(protocol: string): string {
-  const oracleSources: Record<string, string> = {
-    'Aave V3': 'Chainlink',
-    'Aave V4': 'Chainlink',
-    'Morpho': 'Chainlink + RedStone',
-    'Euler': 'Chainlink + Pyth',
-    'Compound V3': 'Chainlink',
-    'Spark': 'Chronicle (MakerDAO)',
-    'Fluid': 'Chainlink + Pyth',
-  }
-  return oracleSources[protocol] || 'Chainlink'
-}
-
 // Check if protocol is audited
 function isProtocolAudited(protocol: string): boolean {
   // All major protocols we track are audited
@@ -197,7 +182,6 @@ export async function GET() {
         utilization: Math.round(utilization * 10) / 10,
         riskRating: calculateRiskRating(pool, protocol),
         description: `${symbol} lending pool on ${protocol} (${chain}). TVL: $${(pool.tvlUsd / 1_000_000).toFixed(0)}M.`,
-        oracleSource: getOracleSource(protocol),
         audited: isProtocolAudited(protocol),
         insuranceCoverage: hasInsuranceCoverage(protocol),
         poolUrl,
