@@ -48,13 +48,13 @@ const PROTOCOL_MAPPING: Record<string, string> = {
   'aave-v3': 'Aave V3',
   'aave-v4': 'Aave V4',
   'morpho-blue': 'Morpho',
-  'morpho': 'Morpho',
+  'morpho-v1': 'Morpho',
   'euler': 'Euler',
   'euler-v2': 'Euler',
   'compound-v3': 'Compound V3',
   'compound': 'Compound V3',
-  'spark': 'Spark',
-  'spark-lend': 'Spark',
+  'spark-savings': 'Spark',
+  'sparklend': 'Spark',
   'fluid-lending': 'Fluid'
 }
 
