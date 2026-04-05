@@ -163,8 +163,9 @@ export async function GET() {
       const isSupported = pool.project in PROTOCOL_MAPPING
       const isChainSupported = supportedChains.includes(pool.chain)
       const hasMinTvl = pool.tvlUsd > 10_000
+      const hasApy = pool.apy > 0.01
 
-      return isSupported && isChainSupported && hasMinTvl
+      return isSupported && isChainSupported && hasMinTvl && hasApy
     })
 
     // Transform pools to our format
