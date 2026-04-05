@@ -46,6 +46,7 @@ export interface TransformedPool {
 // Protocol name mapping from DeFiLlama to display name
 const PROTOCOL_MAPPING: Record<string, string> = {
   'aave-v3': 'Aave V3',
+  'aave-v4': 'Aave V4',
   'morpho-blue': 'Morpho',
   'morpho': 'Morpho',
   'euler': 'Euler',
@@ -70,6 +71,7 @@ const CHAIN_MAPPING: Record<string, string> = {
 // Static protocol URLs - no dynamic mapping based on chain/asset
 const PROTOCOL_URLS: Record<string, string> = {
   'Aave V3': 'https://app.aave.com/',
+  'Aave V4': 'https://pro.aave.com/',
   'Morpho': 'https://app.morpho.org/vaults',
   'Euler': 'https://app.euler.finance/',
   'Compound V3': 'https://app.compound.finance/',
@@ -116,6 +118,7 @@ function getAssetType(symbol: string, isStablecoin: boolean): TransformedPool['a
 function getOracleSource(protocol: string): string {
   const oracleSources: Record<string, string> = {
     'Aave V3': 'Chainlink',
+    'Aave V4': 'Chainlink',
     'Morpho': 'Chainlink + RedStone',
     'Euler': 'Chainlink + Pyth',
     'Compound V3': 'Chainlink',
@@ -150,13 +153,16 @@ export async function GET() {
     const data = await response.json()
     const pools: DefiLlamaPool[] = data.data
 
+    const aaveV4 = pools.filter(p => p.project.includes('aave'))
+    console.log('Aave slugs:', [...new Set(aaveV4.map(p => p.project))])
+
     // Filter for supported chains
     const supportedChains = Object.keys(CHAIN_MAPPING)
 
     const filteredPools = pools.filter(pool => {
       const isSupported = pool.project in PROTOCOL_MAPPING
       const isChainSupported = supportedChains.includes(pool.chain)
-      const hasMinTvl = pool.tvlUsd > 2_000_000
+      const hasMinTvl = pool.tvlUsd > 10_000
 
       return isSupported && isChainSupported && hasMinTvl
     })

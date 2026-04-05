@@ -1,5 +1,5 @@
 export type Chain = 'Ethereum' | 'Arbitrum' | 'Base' | 'Optimism' | 'Polygon' | 'Avalanche'
-export type Protocol = 'Aave V3' | 'Morpho' | 'Euler' | 'Compound V3' | 'Spark' | 'Fluid'
+export type Protocol = 'Aave V3' | 'Aave V4' | 'Morpho' | 'Euler' | 'Compound V3' | 'Spark' | 'Fluid'
 export type RiskLevel = 'A' | 'B+' | 'B' | 'C+' | 'C' | 'D'
 export type AssetType = 'Stablecoin' | 'Blue Chip' | 'LST' | 'LRT' | 'Volatile'
 
@@ -32,7 +32,7 @@ export interface LendingPool {
 }
 
 export const CHAINS: Chain[] = ['Ethereum', 'Arbitrum', 'Base', 'Optimism', 'Polygon', 'Avalanche']
-export const PROTOCOLS: Protocol[] = ['Aave V3', 'Morpho', 'Euler', 'Compound V3', 'Spark', 'Fluid']
+export const PROTOCOLS: Protocol[] = ['Aave V3', 'Aave V4', 'Morpho', 'Euler', 'Compound V3', 'Spark', 'Fluid']
 export const ASSET_TYPES: AssetType[] = ['Stablecoin', 'Blue Chip', 'LST', 'LRT', 'Volatile']
 
 export const CHAIN_COLORS: Record<Chain, string> = {
@@ -46,6 +46,7 @@ export const CHAIN_COLORS: Record<Chain, string> = {
 
 export const PROTOCOL_COLORS: Record<Protocol, string> = {
   'Aave V3': '#B6509E',
+  'Aave V4': '#9d0affff',
   'Morpho': '#1E88E5',
   'Euler': '#E6007A',
   'Compound V3': '#00D395',
@@ -65,6 +66,7 @@ export const RISK_COLORS: Record<RiskLevel, string> = {
 // Protocol app URLs
 export const PROTOCOL_URLS: Record<Protocol, string> = {
   'Aave V3': 'https://app.aave.com/',
+  'Aave V4': 'https://pro.aave.com/',
   'Morpho': 'https://app.morpho.org/vaults',
   'Euler': 'https://app.euler.finance/',
   'Compound V3': 'https://app.compound.finance/',

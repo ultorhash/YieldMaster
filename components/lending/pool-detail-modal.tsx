@@ -7,14 +7,13 @@ import { useEffect } from 'react'
 // Static protocol URLs - no dynamic mapping
 const PROTOCOL_URLS: Record<string, string> = {
   'Aave V3': 'https://app.aave.com/',
+  'Aave V4': 'https://pro.aave.com/',
   'Morpho': 'https://app.morpho.org/vaults',
   'Euler': 'https://app.euler.finance/',
   'Compound V3': 'https://app.compound.finance/',
   'Spark': 'https://app.spark.fi/',
   'Fluid': 'https://fluid.io/lending/1',
 }
-
-
 
 interface PoolDetailModalProps {
   pool: LendingPool | null
@@ -33,11 +32,11 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
   if (!pool) return null
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
       onClick={onClose}
     >
-      <div 
+      <div
         className="bg-card border border-border w-full max-w-2xl max-h-[90vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}
       >
@@ -105,7 +104,7 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
                     <div
                       key={index}
                       className="h-full"
-                      style={{ 
+                      style={{
                         width: `${item.percentage}%`,
                         backgroundColor: item.color
                       }}
@@ -116,7 +115,7 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
                 <div className="flex flex-wrap gap-4">
                   {pool.vaultComposition.map((item, index) => (
                     <div key={index} className="flex items-center gap-2">
-                      <span 
+                      <span
                         className="w-3 h-3"
                         style={{ backgroundColor: item.color }}
                       />
@@ -137,9 +136,9 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
             <div className="bg-muted/30 p-4 space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">Overall Rating</span>
-                <span 
+                <span
                   className="px-3 py-1 text-sm font-bold"
-                  style={{ 
+                  style={{
                     backgroundColor: RISK_COLORS[pool.riskRating] + '20',
                     color: RISK_COLORS[pool.riskRating]
                   }}
@@ -147,20 +146,20 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
                   {pool.riskRating}
                 </span>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck 
-                    className={`h-4 w-4 ${pool.audited ? 'text-primary' : 'text-muted-foreground/30'}`} 
+                  <ShieldCheck
+                    className={`h-4 w-4 ${pool.audited ? 'text-primary' : 'text-muted-foreground/30'}`}
                   />
                   <span className={`text-sm ${pool.audited ? 'text-foreground' : 'text-muted-foreground'}`}>
                     {pool.audited ? 'Audited Contracts' : 'Not Audited'}
                   </span>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
-                  <Shield 
-                    className={`h-4 w-4 ${pool.insuranceCoverage ? 'text-chart-3' : 'text-muted-foreground/30'}`} 
+                  <Shield
+                    className={`h-4 w-4 ${pool.insuranceCoverage ? 'text-chart-3' : 'text-muted-foreground/30'}`}
                   />
                   <span className={`text-sm ${pool.insuranceCoverage ? 'text-foreground' : 'text-muted-foreground'}`}>
                     {pool.insuranceCoverage ? 'Insurance Coverage' : 'No Insurance'}
@@ -168,8 +167,8 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Bug 
-                    className={`h-4 w-4 ${pool.hadExploit ? 'text-destructive' : 'text-muted-foreground/30'}`} 
+                  <Bug
+                    className={`h-4 w-4 ${pool.hadExploit ? 'text-destructive' : 'text-muted-foreground/30'}`}
                   />
                   <span className={`text-sm ${pool.hadExploit ? 'text-foreground' : 'text-muted-foreground'}`}>
                     {pool.hadExploit ? 'Past Exploit' : 'No Past Exploits'}
@@ -200,8 +199,8 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
             <div className="flex items-start gap-3">
               <AlertTriangle className="h-5 w-5 text-chart-3 shrink-0 mt-0.5" />
               <div className="text-sm text-muted-foreground leading-relaxed">
-                <strong className="text-foreground">Warning:</strong> Risk ratings are indicative and do not constitute investment advice. 
-                Always conduct your own research (DYOR) before depositing funds. 
+                <strong className="text-foreground">Warning:</strong> Risk ratings are indicative and do not constitute investment advice.
+                Always conduct your own research (DYOR) before depositing funds.
                 Smart contract risk, oracle manipulation, and depeg risk are always present in DeFi.
               </div>
             </div>

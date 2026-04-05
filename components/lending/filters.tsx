@@ -27,7 +27,7 @@ function formatTvlLabel(value: number): string {
 // Logarithmic scale: slider 0–100 maps to $2M–$10B
 const SLIDER_MIN = 0
 const SLIDER_MAX = 100
-const TVL_MIN = 2_000_000
+const TVL_MIN = 10_000
 const TVL_MAX = 10_000_000_000
 
 function tvlToSlider(tvl: number): number {

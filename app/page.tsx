@@ -17,7 +17,7 @@ export default function LendingAggregator() {
   const [selectedAssetTypes, setSelectedAssetTypes] = useState<AssetType[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [minApy, setMinApy] = useState<number | null>(null)
-  const [minTvl, setMinTvl] = useState(2_000_000)
+  const [minTvl, setMinTvl] = useState(10_000)
 
   // Data states
   const [pools, setPools] = useState<LendingPool[]>([])
