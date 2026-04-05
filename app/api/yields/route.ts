@@ -51,7 +51,8 @@ const PROTOCOL_MAPPING: Record<string, string> = {
   'compound-v3': 'Compound V3',
   'spark-savings': 'Spark',
   'sparklend': 'Spark',
-  'fluid-lending': 'Fluid'
+  'fluid-lending': 'Fluid',
+  'extra-finance-xlend': 'ExtraFi XLend'
 }
 
 // Chain name mapping
@@ -73,6 +74,7 @@ const PROTOCOL_URLS: Record<string, string> = {
   'Compound V3': 'https://app.compound.finance/',
   'Spark': 'https://app.spark.fi/',
   'Fluid': 'https://fluid.io/lending/1',
+  'ExtraFi XLend': 'https://xlend.extrafi.io/'
 }
 
 // Risk rating based on TVL, audit status, and protocol maturity

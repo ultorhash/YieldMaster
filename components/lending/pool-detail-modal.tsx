@@ -13,6 +13,7 @@ const PROTOCOL_URLS: Record<string, string> = {
   'Compound V3': 'https://app.compound.finance/',
   'Spark': 'https://app.spark.fi/',
   'Fluid': 'https://fluid.io/lending/1',
+  'ExtraFi XLend': 'https://xlend.extrafi.io/'
 }
 
 interface PoolDetailModalProps {
