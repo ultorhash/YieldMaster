@@ -150,28 +150,20 @@ export async function GET() {
     const data = await response.json()
     const pools: DefiLlamaPool[] = data.data
 
-    // Filter for supported protocols and chains
-    const supportedProtocols = Object.keys(PROTOCOL_MAPPING)
+    // Filter for supported chains
     const supportedChains = Object.keys(CHAIN_MAPPING)
 
     const filteredPools = pools.filter(pool => {
-      const projectLower = pool.project.toLowerCase()
-      const isSupported = supportedProtocols.some(p =>
-        projectLower === p || projectLower.includes(p.replace('-', ''))
-      )
+      const isSupported = pool.project in PROTOCOL_MAPPING
       const isChainSupported = supportedChains.includes(pool.chain)
-      const hasMinTvl = pool.tvlUsd > 10_000_000 // Min $10M TVL
+      const hasMinTvl = pool.tvlUsd > 2_000_000
 
       return isSupported && isChainSupported && hasMinTvl
     })
 
     // Transform pools to our format
     const transformedPools: TransformedPool[] = filteredPools.map(pool => {
-      const projectLower = pool.project.toLowerCase()
-      const protocolKey = supportedProtocols.find(p =>
-        projectLower === p || projectLower.includes(p.replace('-', ''))
-      )
-      const protocol = protocolKey ? PROTOCOL_MAPPING[protocolKey] : pool.project
+      const protocol = PROTOCOL_MAPPING[pool.project]
       const chain = CHAIN_MAPPING[pool.chain] || pool.chain
 
       // Clean up symbol
