@@ -6,7 +6,7 @@ export const CHAINS = [
 ] as const
 export const PROTOCOLS = [
   'Aave V3', 'Aave V4', 'Morpho', 'Euler', 'Compound V3', 'Spark', 'Fluid',
-  'ExtraFi XLend', 'Auto', 'Moonwell', '40acres', 'Dolomite', 'HyperLend',
+  'ExtraFi XLend', 'Auto', 'Moonwell', '40acres', 'Dolomite', 'YO', 'HyperLend',
   'HypurrFi', 'Kamino', 'Save', 'Loopscale', 'Navi', 'Scallop'
 ] as const
 
@@ -86,6 +86,7 @@ export const PROTOCOL_COLORS: Record<Protocol, string> = {
   'Moonwell': '#0069D3',
   '40acres': '#0A5631',
   'Dolomite': '#FFFFFF',
+  'YO': '#D6FF34',
   'HyperLend': '#13584E',
   'HypurrFi': '#A8E11A',
   'Kamino': '#272F7D',
@@ -109,6 +110,7 @@ export const PROTOCOL_MAPPING: Record<string, string> = {
   'moonwell-lending': 'Moonwell',
   '40-acres': '40acres',
   'dolomite': 'Dolomite',
+  'yo-protocol': 'YO',
   'hyperlend-pooled': 'HyperLend',
   'hypurrfi-isolated': 'HypurrFi',
   'hypurrfi-pooled': 'HypurrFi',
@@ -132,6 +134,7 @@ export const PROTOCOL_URLS: Record<Protocol, string> = {
   'Moonwell': 'https://moonwell.fi/markets',
   '40acres': 'https://www.40acres.finance/',
   'Dolomite': 'https://app.dolomite.io/earn',
+  'YO': 'https://app.yo.xyz/',
   'HyperLend': 'https://app.hyperlend.finance/markets',
   'HypurrFi': 'https://hypurrfi.com/lend',
   'Kamino': 'https://kamino.com/lend',
