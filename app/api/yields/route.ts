@@ -50,6 +50,7 @@ const PROTOCOL_MAPPING: Record<string, string> = {
   'extra-finance-xlend': 'ExtraFi XLend',
   'autofinance': 'Auto',
   'moonwell-lending': 'Moonwell',
+  '40-acres': '40acres'
 }
 
 const CHAIN_MAPPING: Record<string, string> = {

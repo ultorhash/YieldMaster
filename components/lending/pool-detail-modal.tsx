@@ -16,6 +16,7 @@ const PROTOCOL_URLS: Record<string, string> = {
   'ExtraFi XLend': 'https://xlend.extrafi.io/',
   'Auto': 'https://app.auto.finance/',
   'Moonwell': 'https://moonwell.fi/markets',
+  '40acres': 'https://www.40acres.finance/'
 }
 
 interface PoolDetailModalProps {
