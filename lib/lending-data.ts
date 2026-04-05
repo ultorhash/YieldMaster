@@ -7,7 +7,7 @@ export const CHAINS = [
 export const PROTOCOLS = [
   'Aave V3', 'Aave V4', 'Morpho', 'Euler', 'Compound V3', 'Spark', 'Fluid',
   'ExtraFi XLend', 'Auto', 'Moonwell', '40acres', 'Dolomite', 'YO', 'HyperLend',
-  'HypurrFi', 'Kamino', 'Save', 'Loopscale', 'Navi', 'Scallop'
+  'HypurrFi', 'Kamino', 'Save', 'Project Φ', 'Loopscale', 'Navi', 'Scallop'
 ] as const
 
 export type Chain = typeof CHAINS[number]
@@ -91,6 +91,7 @@ export const PROTOCOL_COLORS: Record<Protocol, string> = {
   'HypurrFi': '#A8E11A',
   'Kamino': '#272F7D',
   'Save': '#FF4F0F',
+  'Project Φ': '#9658E6',
   'Loopscale': '#018CE2',
   'Navi': '#0DC3A4',
   'Scallop': '#F1D6C8'
@@ -116,6 +117,7 @@ export const PROTOCOL_MAPPING: Record<string, string> = {
   'hypurrfi-pooled': 'HypurrFi',
   'kamino-lend': 'Kamino',
   'save': 'Save',
+  'project-0': 'Project Φ',
   'loopscale': 'Loopscale',
   'navi-lending': 'Navi',
   'scallop-lend': 'Scallop'
@@ -139,6 +141,7 @@ export const PROTOCOL_URLS: Record<Protocol, string> = {
   'HypurrFi': 'https://hypurrfi.com/lend',
   'Kamino': 'https://kamino.com/lend',
   'Save': 'https://save.finance/',
+  'Project Φ': 'https://app.0.xyz/',
   'Loopscale': 'https://app.loopscale.com/lend',
   'Navi': 'https://app.naviprotocol.io/',
   'Scallop': 'https://app.scallop.io/'
