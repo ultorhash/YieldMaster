@@ -113,8 +113,8 @@ const PoolRow = memo(function PoolRow({ pool, index, onSelect }: PoolRowProps) {
 })
 
 export function PoolTable({ pools }: PoolTableProps) {
-  const [sortKey, setSortKey] = useState<SortKey>('supplyApy')
-  const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
+  const [sortKey, setSortKey] = useState<SortKey>('riskRating')
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
   const [selectedPool, setSelectedPool] = useState<LendingPool | null>(null)
 
   const handleSort = useCallback((key: SortKey) => {
