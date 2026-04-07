@@ -85,7 +85,7 @@ export async function GET() {
         pool.project in PROTOCOL_MAPPING &&
         supportedChains.includes(pool.chain) &&
         pool.tvlUsd > 10_000 &&
-        (pool.apyBase ?? pool.apy) > 0.01
+        ((pool.apyBase ?? 0) + (pool.apyReward ?? 0)) > 0.01
       )
     })
 
@@ -93,7 +93,7 @@ export async function GET() {
       const protocol = PROTOCOL_MAPPING[pool.project]
       const chain = CHAIN_MAPPING[pool.chain] || pool.chain
       const symbol = pool.symbol.split('-')[0].replace(/[^A-Za-z0-9]/g, '')
-      const supplyApy = pool.apyBase != null ? pool.apyBase : pool.apy ?? 0
+      const supplyApy = pool.apyBase ?? 0
       const rewardApy = pool.apyReward ?? 0
       const poolUrl = getProtocolUrl(protocol)
 
