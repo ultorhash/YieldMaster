@@ -31,12 +31,8 @@ export interface LendingPool {
   totalApy: number
   tvl: number
   riskRating: RiskLevel
-  description: string
   audited: boolean
   insurance: boolean
-  hadExploit: boolean
-  exploitDetails?: string
-  poolUrl?: string
 }
 
 export const RISK_COLORS: Record<RiskLevel, string> = {

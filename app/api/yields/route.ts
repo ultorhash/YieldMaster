@@ -1,4 +1,4 @@
-import { CHAIN_MAPPING, EXPLOIT_PENALTY, EXPLOITED_PROTOCOLS, getProtocolUrl, PROTOCOL_MAPPING, RiskLevel } from '@/lib/lending-data'
+import { CHAIN_MAPPING, EXPLOIT_PENALTY, EXPLOITED_PROTOCOLS, getProtocolUrl, LendingPool, PROTOCOL_MAPPING, RiskLevel } from '@/lib/lending-data'
 import { NextResponse } from 'next/server'
 
 interface DefiLlamaPool {
@@ -36,22 +36,6 @@ interface DefiLlamaPool {
   apyBaseInception: number | null;
 }
 
-export interface TransformedPool {
-  id: string
-  protocol: string
-  chain: string
-  asset: string
-  assetType: 'Stablecoin' | 'Blue Chip' | 'LST' | 'LRT' | 'Volatile'
-  supplyApy: number
-  rewardApy: number
-  totalApy: number
-  tvl: number
-  riskRating: 'A' | 'B+' | 'B' | 'C+' | 'C' | 'D'
-  audited: boolean
-  insurance: boolean
-  poolUrl: string
-}
-
 function calculateRiskRating(pool: DefiLlamaPool, protocol: string): RiskLevel {
   const { tvlUsd: tvl, stablecoin, exposure, ilRisk } = pool
   const exploit = EXPLOITED_PROTOCOLS[protocol]
@@ -70,7 +54,7 @@ function calculateRiskRating(pool: DefiLlamaPool, protocol: string): RiskLevel {
   return ratings[Math.min(Math.max(base + bonus - penalty - 1, 0), ratings.length - 1)]
 }
 
-function getAssetType(symbol: string, isStablecoin: boolean): TransformedPool['assetType'] {
+function getAssetType(symbol: string, isStablecoin: boolean): LendingPool['assetType'] {
   if (isStablecoin) return 'Stablecoin'
   const lsts = ['STETH', 'WSTETH', 'CBETH', 'RETH', 'SFRXETH', 'ANKRB', 'OSETH']
   const lrts = ['WEETH', 'EZETH', 'RSETH', 'PUFETH', 'METH']
@@ -105,7 +89,7 @@ export async function GET() {
       )
     })
 
-    const transformedPools: TransformedPool[] = filteredPools.map(pool => {
+    const transformedPools: LendingPool[] = filteredPools.map(pool => {
       const protocol = PROTOCOL_MAPPING[pool.project]
       const chain = CHAIN_MAPPING[pool.chain] || pool.chain
       const symbol = pool.symbol.split('-')[0].replace(/[^A-Za-z0-9]/g, '')
