@@ -2,22 +2,38 @@ import { CHAIN_MAPPING, EXPLOIT_PENALTY, EXPLOITED_PROTOCOLS, getProtocolUrl, PR
 import { NextResponse } from 'next/server'
 
 interface DefiLlamaPool {
-  chain: string
-  project: string
-  symbol: string
-  tvlUsd: number
-  apyBase: number | null
-  apyReward: number | null
-  apy: number
-  pool: string
-  stablecoin: boolean
-  ilRisk: string
-  exposure: string
-  poolMeta: string | null
-  underlyingTokens: string[]
-  totalSupplyUsd?: number
-  totalBorrowUsd?: number
-  ltv?: number
+  chain: string;
+  project: string;
+  symbol: string;
+  tvlUsd: number;
+  apyBase: number | null;
+  apyReward: number | null;
+  apy: number;
+  rewardTokens: string[] | null;
+  pool: string;
+  apyPct1D: number | null;
+  apyPct7D: number | null;
+  apyPct30D: number | null;
+  stablecoin: boolean;
+  ilRisk: string;
+  exposure: string;
+  predictions: {
+    predictedClass: string;
+    predictedProbability: number;
+    binnedConfidence: number;
+  };
+  poolMeta: string | null;
+  mu: number;
+  sigma: number;
+  count: number;
+  outlier: boolean;
+  underlyingTokens: string[] | null;
+  il7d: number | null;
+  apyBase7d: number | null;
+  apyMean30d: number;
+  volumeUsd1d: number | null;
+  volumeUsd7d: number | null;
+  apyBaseInception: number | null;
 }
 
 export interface TransformedPool {
@@ -31,12 +47,9 @@ export interface TransformedPool {
   totalApy: number
   tvl: number
   riskRating: 'A' | 'B+' | 'B' | 'C+' | 'C' | 'D'
-  description: string
   audited: boolean
-  insuranceCoverage: boolean
+  insurance: boolean
   poolUrl: string
-  defiLlamaPoolId: string
-  vaultComposition?: { asset: string; percentage: number; color: string }[]
 }
 
 function calculateRiskRating(pool: DefiLlamaPool, protocol: string): RiskLevel {
@@ -111,11 +124,9 @@ export async function GET() {
         totalApy: Math.round((pool.apy ?? 0) * 100) / 100,
         tvl: pool.tvlUsd,
         riskRating: calculateRiskRating(pool, protocol),
-        description: `${symbol} lending pool on ${protocol} (${chain}). TVL: $${(pool.tvlUsd / 1_000_000).toFixed(0)}M.`,
         audited: true,
-        insuranceCoverage: hasInsuranceCoverage(protocol),
-        poolUrl,
-        defiLlamaPoolId: pool.pool
+        insurance: hasInsuranceCoverage(protocol),
+        poolUrl
       }
     })
 

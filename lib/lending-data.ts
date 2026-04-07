@@ -20,12 +20,6 @@ export interface ExploitRecord {
   type: 'logic' | 'oracle'
 }
 
-export interface VaultComposition {
-  asset: string
-  percentage: number
-  color: string
-}
-
 export interface LendingPool {
   id: string
   protocol: string
@@ -37,14 +31,12 @@ export interface LendingPool {
   totalApy: number
   tvl: number
   riskRating: RiskLevel
-  vaultComposition?: VaultComposition[]
   description: string
   audited: boolean
-  insuranceCoverage: boolean
+  insurance: boolean
   hadExploit: boolean
   exploitDetails?: string
   poolUrl?: string
-  defiLlamaPoolId?: string
 }
 
 export const RISK_COLORS: Record<RiskLevel, string> = {

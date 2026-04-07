@@ -86,8 +86,8 @@ const PoolRow = memo(function PoolRow({ pool, index, onSelect }: PoolRowProps) {
           <span title={pool.audited ? 'Audited' : 'Not Audited'}>
             <ShieldCheck className={`h-4 w-4 ${pool.audited ? 'text-primary' : 'text-muted-foreground/30'}`} />
           </span>
-          <span title={pool.insuranceCoverage ? 'Insurance' : 'No Insurance'}>
-            <Shield className={`h-4 w-4 ${pool.insuranceCoverage ? 'text-chart-4' : 'text-muted-foreground/30'}`} />
+          <span title={pool.insurance ? 'Insurance' : 'No Insurance'}>
+            <Shield className={`h-4 w-4 ${pool.insurance ? 'text-chart-4' : 'text-muted-foreground/30'}`} />
           </span>
           <span title={
             exploit

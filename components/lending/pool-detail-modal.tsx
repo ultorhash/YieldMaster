@@ -68,35 +68,6 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
               <p className="text-2xl font-mono font-bold text-foreground">{formatTVL(pool.tvl)}</p>
             </div>
           </div>
-
-          {pool.vaultComposition && pool.vaultComposition.length > 0 && (
-            <div>
-              <h3 className="text-sm font-medium text-foreground mb-3 uppercase tracking-wider">
-                Vault Composition / Exposure
-              </h3>
-              <div className="space-y-3">
-                <div className="h-3 flex overflow-hidden">
-                  {pool.vaultComposition.map((item, index) => (
-                    <div
-                      key={index}
-                      className="h-full"
-                      style={{ width: `${item.percentage}%`, backgroundColor: item.color }}
-                    />
-                  ))}
-                </div>
-                <div className="flex flex-wrap gap-4">
-                  {pool.vaultComposition.map((item, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <span className="w-3 h-3" style={{ backgroundColor: item.color }} />
-                      <span className="text-sm text-foreground">{item.asset}</span>
-                      <span className="text-sm font-mono text-muted-foreground">{item.percentage}%</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
           <div>
             <h3 className="text-sm font-medium text-foreground mb-3 uppercase tracking-wider">
               Risk Assessment
@@ -124,9 +95,9 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Shield className={`h-4 w-4 ${pool.insuranceCoverage ? 'text-chart-4' : 'text-muted-foreground/30'}`} />
-                  <span className={`text-sm ${pool.insuranceCoverage ? 'text-foreground' : 'text-muted-foreground'}`}>
-                    {pool.insuranceCoverage ? 'Insurance' : 'No Insurance'}
+                  <Shield className={`h-4 w-4 ${pool.insurance ? 'text-chart-4' : 'text-muted-foreground/30'}`} />
+                  <span className={`text-sm ${pool.insurance ? 'text-foreground' : 'text-muted-foreground'}`}>
+                    {pool.insurance ? 'Insurance' : 'No Insurance'}
                   </span>
                 </div>
 
@@ -172,7 +143,7 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
 
         <div className="p-6 border-t border-border flex flex-col sm:flex-row justify-between gap-3">
           <a
-            href={`https://defillama.com/yields/pool/${pool.defiLlamaPoolId || pool.id}`}
+            href={`https://defillama.com/yields/pool/${pool.id}`}
             target="_blank"
             rel="noopener noreferrer"
             className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2 cursor-pointer"
