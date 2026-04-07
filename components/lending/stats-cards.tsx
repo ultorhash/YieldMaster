@@ -38,23 +38,23 @@ export function StatsCards({ pools }: StatsCardsProps) {
   ]
 
   return (
-    <div className="grid grid-cols-3 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-3 gap-3">
       {stats.map((stat, index) => (
         <div
           key={index}
-          className="bg-card border border-border p-4 lg:p-5"
+          className="bg-card border border-border p-3 lg:p-5 min-w-0"  // min-w-0 zapobiega overflow
         >
-          <div className="flex items-start justify-between mb-3">
-            <stat.icon className="h-5 w-5 text-muted-foreground" />
+          <div className="flex items-start justify-between mb-2 lg:mb-3">
+            <stat.icon className="h-4 w-4 lg:h-5 lg:w-5 text-muted-foreground shrink-0" />
           </div>
-          <p className="text-2xl lg:text-3xl font-mono font-bold text-foreground mb-1">
+          <p className="text-base sm:text-xl lg:text-3xl font-mono font-bold text-foreground mb-1 truncate">
             {stat.value}
           </p>
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-muted-foreground uppercase tracking-wider">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5">
+            <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider truncate">
               {stat.label}
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-[10px] sm:text-xs text-muted-foreground truncate">
               {stat.description}
             </p>
           </div>
