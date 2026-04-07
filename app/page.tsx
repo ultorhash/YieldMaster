@@ -6,6 +6,7 @@ import { Filters } from '@/components/lending/filters'
 import { PoolTable } from '@/components/lending/pool-table'
 import { StatsCards } from '@/components/lending/stats-cards'
 import { AssetType, LendingPool } from '@/lib/lending-data'
+import { useNewDataToast } from '@/hooks/use-new-data-toast'
 
 export default function LendingAggregator() {
   // Mounted state to prevent hydration mismatch from browser extensions
@@ -23,7 +24,6 @@ export default function LendingAggregator() {
   const [pools, setPools] = useState<LendingPool[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
-  const [dataSource, setDataSource] = useState<'live' | 'fallback'>('live')
 
   // Fetch real data from DeFiLlama API
   const fetchPools = useCallback(async () => {
@@ -35,10 +35,8 @@ export default function LendingAggregator() {
       const data = await response.json()
       setPools(data.pools)
       setLastUpdated(new Date(data.lastUpdated))
-      setDataSource('live')
     } catch (error) {
       setLastUpdated(new Date())
-      setDataSource('fallback')
     } finally {
       setIsLoading(false)
     }
@@ -53,6 +51,8 @@ export default function LendingAggregator() {
   const handleRefresh = useCallback(() => {
     fetchPools()
   }, [fetchPools])
+
+  useNewDataToast(pools)
 
   // Filtered pools
   const filteredPools = useMemo(() => {

@@ -1,8 +1,6 @@
 import { CHAIN_MAPPING, EXPLOIT_PENALTY, EXPLOITED_PROTOCOLS, getProtocolUrl, PROTOCOL_MAPPING, RiskLevel } from '@/lib/lending-data'
 import { NextResponse } from 'next/server'
 
-export const revalidate = 3000
-
 interface DefiLlamaPool {
   chain: string
   project: string
@@ -75,9 +73,7 @@ function hasInsuranceCoverage(protocol: string): boolean {
 
 export async function GET() {
   try {
-    const response = await fetch('https://yields.llama.fi/pools', {
-      next: { revalidate: revalidate }
-    })
+    const response = await fetch('https://yields.llama.fi/pools')
 
     if (!response.ok) throw new Error('Failed to fetch yields data')
 
