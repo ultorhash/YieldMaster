@@ -2,7 +2,7 @@
 
 import { useState, useCallback, memo, useMemo } from 'react'
 import { LendingPool, formatTVL, formatAPY, CHAIN_COLORS, PROTOCOL_COLORS, RISK_COLORS, PROTOCOL_URLS, Protocol, EXPLOITED_PROTOCOLS } from '@/lib/lending-data'
-import { ChevronUp, ChevronDown, Info, Shield, ShieldCheck, ExternalLink, Bug } from 'lucide-react'
+import { ChevronUp, ChevronDown, Info, Shield, ShieldCheck, ExternalLink, Bug, Gift } from 'lucide-react'
 import { PoolDetailModal } from './pool-detail-modal'
 
 type SortKey = 'asset' | 'protocol' | 'chain' | 'supplyApy' | 'tvl' | 'riskRating'
@@ -52,7 +52,20 @@ const PoolRow = memo(function PoolRow({ pool, index, onSelect }: PoolRowProps) {
         </div>
       </td>
       <td className="p-4 text-right">
-        <span className="font-mono text-primary font-medium">{formatAPY(pool.supplyApy)}</span>
+        <div className="flex items-center justify-end gap-1.5">
+          <span className="font-mono text-primary font-medium">
+            {formatAPY(pool.supplyApy)}
+          </span>
+          {pool.rewardApy > 0 && (
+            <span
+              className="font-mono text-[11px] text-violet-500 flex items-center gap-1"
+              title="Rewards"
+            >
+              +{formatAPY(pool.rewardApy)}
+              <Gift className="h-3 w-3" />
+            </span>
+          )}
+        </div>
       </td>
       <td className="p-4 text-right">
         <span className="font-mono text-sm text-foreground">{formatTVL(pool.tvl)}</span>
@@ -73,7 +86,7 @@ const PoolRow = memo(function PoolRow({ pool, index, onSelect }: PoolRowProps) {
           <span title={pool.audited ? 'Audited' : 'Not Audited'}>
             <ShieldCheck className={`h-4 w-4 ${pool.audited ? 'text-primary' : 'text-muted-foreground/30'}`} />
           </span>
-          <span title={pool.insuranceCoverage ? 'Insurance Available' : 'No Insurance'}>
+          <span title={pool.insuranceCoverage ? 'Insurance' : 'No Insurance'}>
             <Shield className={`h-4 w-4 ${pool.insuranceCoverage ? 'text-chart-4' : 'text-muted-foreground/30'}`} />
           </span>
           <span title={
@@ -171,6 +184,10 @@ export function PoolTable({ pools }: PoolTableProps) {
             Lending Pools
           </h2>
           <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1.5">
+              <Gift className="h-4 w-4 text-violet-500" />
+              <span>Rewards</span>
+            </div>
             <div className="flex items-center gap-1.5">
               <ShieldCheck className="h-4 w-4 text-primary" />
               <span>Audited</span>

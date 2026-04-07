@@ -27,6 +27,8 @@ export interface TransformedPool {
   asset: string
   assetType: 'Stablecoin' | 'Blue Chip' | 'LST' | 'LRT' | 'Volatile'
   supplyApy: number
+  rewardApy: number
+  totalApy: number
   tvl: number
   riskRating: 'A' | 'B+' | 'B' | 'C+' | 'C' | 'D'
   description: string
@@ -94,7 +96,8 @@ export async function GET() {
       const protocol = PROTOCOL_MAPPING[pool.project]
       const chain = CHAIN_MAPPING[pool.chain] || pool.chain
       const symbol = pool.symbol.split('-')[0].replace(/[^A-Za-z0-9]/g, '')
-      const supplyApy = pool.apyBase || pool.apy || 0
+      const supplyApy = pool.apyBase != null ? pool.apyBase : pool.apy ?? 0
+      const rewardApy = pool.apyReward ?? 0
       const poolUrl = getProtocolUrl(protocol)
 
       return {
@@ -104,13 +107,15 @@ export async function GET() {
         asset: symbol,
         assetType: getAssetType(symbol, pool.stablecoin),
         supplyApy: Math.round(supplyApy * 100) / 100,
+        rewardApy: Math.round(rewardApy * 100) / 100,
+        totalApy: Math.round((pool.apy ?? 0) * 100) / 100,
         tvl: pool.tvlUsd,
         riskRating: calculateRiskRating(pool, protocol),
         description: `${symbol} lending pool on ${protocol} (${chain}). TVL: $${(pool.tvlUsd / 1_000_000).toFixed(0)}M.`,
         audited: true,
         insuranceCoverage: hasInsuranceCoverage(protocol),
         poolUrl,
-        defiLlamaPoolId: pool.pool,
+        defiLlamaPoolId: pool.pool
       }
     })
 

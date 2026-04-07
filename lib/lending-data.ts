@@ -33,6 +33,8 @@ export interface LendingPool {
   asset: string
   assetType: AssetType
   supplyApy: number
+  rewardApy: number
+  totalApy: number
   tvl: number
   riskRating: RiskLevel
   vaultComposition?: VaultComposition[]

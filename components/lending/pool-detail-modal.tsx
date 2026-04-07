@@ -52,11 +52,17 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
         </div>
 
         <div className="p-6 space-y-6">
-          <div className="grid grid-cols-2 gap-4">
+          <div className={`grid gap-4 ${pool.rewardApy > 0 ? 'grid-cols-3' : 'grid-cols-2'}`}>
             <div className="bg-muted/30 p-4">
               <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Supply APY</p>
               <p className="text-2xl font-mono font-bold text-primary">{formatAPY(pool.supplyApy)}</p>
             </div>
+            {pool.rewardApy > 0 && (
+              <div className="bg-muted/30 p-4">
+                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Reward APY</p>
+                <p className="text-2xl font-mono font-bold text-violet-500">+{formatAPY(pool.rewardApy)}</p>
+              </div>
+            )}
             <div className="bg-muted/30 p-4">
               <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">TVL</p>
               <p className="text-2xl font-mono font-bold text-foreground">{formatTVL(pool.tvl)}</p>
@@ -120,7 +126,7 @@ export function PoolDetailModal({ pool, onClose }: PoolDetailModalProps) {
                 <div className="flex items-center gap-2">
                   <Shield className={`h-4 w-4 ${pool.insuranceCoverage ? 'text-chart-4' : 'text-muted-foreground/30'}`} />
                   <span className={`text-sm ${pool.insuranceCoverage ? 'text-foreground' : 'text-muted-foreground'}`}>
-                    {pool.insuranceCoverage ? 'Insurance Available' : 'No Insurance'}
+                    {pool.insuranceCoverage ? 'Insurance' : 'No Insurance'}
                   </span>
                 </div>
 
