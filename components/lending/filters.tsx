@@ -35,7 +35,7 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 function formatTvlLabel(value: number): string {
-  if (value >= 1_000_000_000) return `$${(value / 1_000_000_000).toFixed(1)}B`
+  if (value >= 1_000_000_000) return `$${(value / 1_000_000_000).toFixed(0)}B`
   if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(0)}M`
   return `$${(value / 1_000).toFixed(0)}K`
 }
