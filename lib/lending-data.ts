@@ -7,8 +7,8 @@ export const CHAINS = [
 export const PROTOCOLS = [
   'Aave V3', 'Aave V4', 'Morpho', 'Euler', 'Compound V3', 'Spark', 'Fluid',
   'ExtraFi XLend', 'Auto', 'Moonwell', '40acres', 'Dolomite', 'Flux', 'YO',
-  'HyperLend', 'HypurrFi', 'Kamino', 'Save', 'Project Φ', 'Loopscale', 'Navi',
-  'Scallop'
+  'Maple', 'HyperLend', 'HypurrFi', 'Kamino', 'Save', 'Project Φ', 'Loopscale',
+  'Navi', 'Scallop'
 ] as const
 
 export type Chain = typeof CHAINS[number]
@@ -93,6 +93,7 @@ export const PROTOCOL_COLORS: Record<Protocol, string> = {
   'Dolomite': '#FFFFFF',
   'Flux': '#757575',
   'YO': '#D6FF34',
+  'Maple': '#FE9D66',
   'HyperLend': '#13584E',
   'HypurrFi': '#A8E11A',
   'Kamino': '#272F7D',
@@ -119,6 +120,7 @@ export const PROTOCOL_MAPPING: Record<string, string> = {
   'dolomite': 'Dolomite',
   'flux-finance': 'Flux',
   'yo-protocol': 'YO',
+  'maple': 'Maple',
   'hyperlend-pooled': 'HyperLend',
   'hypurrfi-isolated': 'HypurrFi',
   'hypurrfi-pooled': 'HypurrFi',
@@ -145,6 +147,7 @@ export const PROTOCOL_URLS: Record<Protocol, string> = {
   'Dolomite': 'https://app.dolomite.io/earn',
   'Flux': 'https://fluxfinance.com/lend',
   'YO': 'https://app.yo.xyz/',
+  'Maple': 'https://app.maple.finance/earn',
   'HyperLend': 'https://app.hyperlend.finance/markets',
   'HypurrFi': 'https://hypurrfi.com/lend',
   'Kamino': 'https://kamino.com/lend',

@@ -68,7 +68,7 @@ function getAssetType(symbol: string, isStablecoin: boolean): TransformedPool['a
 }
 
 function hasInsuranceCoverage(protocol: string): boolean {
-  return ['Aave V3', 'Compound V3', 'Spark'].includes(protocol)
+  return ['Aave V3', 'Compound V3', 'Spark', 'Maple'].includes(protocol)
 }
 
 export async function GET() {
