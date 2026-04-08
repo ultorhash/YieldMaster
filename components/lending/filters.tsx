@@ -95,12 +95,19 @@ export function Filters({
   const [localTvl, setLocalTvl] = useState(minTvl)
   const debouncedTvl = useDebounce(localTvl, 300)
 
+  const [localApy, setLocalApy] = useState(minApy)
+  const debouncedApy = useDebounce(localApy, 300)
+
   const [localSearch, setLocalSearch] = useState(searchQuery)
   const debouncedSearch = useDebounce(localSearch, 300)
 
   useEffect(() => {
     setSearchQuery(debouncedSearch)
   }, [debouncedSearch, setSearchQuery])
+
+  useEffect(() => {
+    setMinApy(debouncedApy)
+  }, [debouncedApy, setMinApy])
 
   useEffect(() => {
     setMinTvl(debouncedTvl)
@@ -126,8 +133,8 @@ export function Filters({
           <input
             type="number"
             placeholder="Min APY %"
-            value={minApy ?? ''}
-            onChange={(e) => setMinApy(e.target.value ? parseFloat(e.target.value) : null)}
+            value={localApy ?? ''}
+            onChange={(e) => setLocalApy(e.target.value ? parseFloat(e.target.value) : null)}
             className="w-36 h-10 px-3 bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary text-sm font-mono"
           />
         </div>
