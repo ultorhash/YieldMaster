@@ -86,7 +86,7 @@ const PoolRow = memo(function PoolRow({ pool, index, onSelect }: PoolRowProps) {
             pool.sigma < 0.25 ? 'text-yellow-500' :
               'text-destructive'
           }`}>
-          {pool.sigma < 0.1 ? 'Stable' : pool.sigma < 0.25 ? 'Moderate' : 'Volatile'}
+          {pool.sigma < 0.1 ? 'Low' : pool.sigma < 0.25 ? 'Medium' : 'High'}
         </span>
       </td>
       <td className="p-4 text-center">
@@ -222,7 +222,7 @@ export function PoolTable({ pools }: PoolTableProps) {
                 <SortTh label="Supply APY" sortKeyName="supplyApy" align="right" />
                 <SortTh label="TVL" sortKeyName="tvl" align="right" />
                 <SortTh label="Risk" sortKeyName="riskRating" align="center" />
-                <SortTh label="Stability" sortKeyName="sigma" align="center" />
+                <SortTh label="Volatility" sortKeyName="sigma" align="center" />
                 <th className="p-4 text-center">
                   <span className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Info</span>
                 </th>
