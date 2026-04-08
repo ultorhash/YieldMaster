@@ -95,6 +95,13 @@ export function Filters({
   const [localTvl, setLocalTvl] = useState(minTvl)
   const debouncedTvl = useDebounce(localTvl, 300)
 
+  const [localSearch, setLocalSearch] = useState(searchQuery)
+  const debouncedSearch = useDebounce(localSearch, 300)
+
+  useEffect(() => {
+    setSearchQuery(debouncedSearch)
+  }, [debouncedSearch, setSearchQuery])
+
   useEffect(() => {
     setMinTvl(debouncedTvl)
   }, [debouncedTvl, setMinTvl])
@@ -110,8 +117,8 @@ export function Filters({
           <input
             type="text"
             placeholder="Search by asset name..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
             className="w-full h-10 pl-10 pr-4 bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary text-sm"
           />
         </div>

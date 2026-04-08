@@ -54,15 +54,16 @@ export default function LendingAggregator() {
 
   useNewDataToast(pools)
 
-  const filteredPools = useMemo(() =>
-    pools.filter(p =>
+  const filteredPools = useMemo(() => {
+    const query = searchQuery.toLowerCase().trim()
+    return pools.filter(p =>
       (selectedChains.length === 0 || selectedChains.includes(p.chain)) &&
       (selectedProtocols.length === 0 || selectedProtocols.includes(p.protocol)) &&
       (selectedAssetTypes.length === 0 || selectedAssetTypes.includes(p.assetType)) &&
-      (minApy === null || p.supplyApy >= minApy) &&
-      p.tvl >= minTvl
-    ),
-    [pools, selectedChains, selectedProtocols, selectedAssetTypes, minApy, minTvl])
+      (minApy === null || p.supplyApy >= minApy) && p.tvl >= minTvl &&
+      (query === '' || p.asset.toLowerCase().includes(query))
+    )
+  }, [pools, selectedChains, selectedProtocols, selectedAssetTypes, minApy, minTvl, searchQuery])
 
   // Show loading state during initial hydration to prevent mismatch
   if (!mounted) {
