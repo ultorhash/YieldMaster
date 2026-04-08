@@ -5,7 +5,7 @@ import { LendingPool, formatTVL, formatAPY, CHAIN_COLORS, PROTOCOL_COLORS, RISK_
 import { ChevronUp, ChevronDown, Info, Shield, ShieldCheck, ExternalLink, Bug, Gift } from 'lucide-react'
 import { PoolDetailModal } from './pool-detail-modal'
 
-type SortKey = 'asset' | 'protocol' | 'chain' | 'supplyApy' | 'tvl' | 'riskRating'
+type SortKey = 'asset' | 'protocol' | 'chain' | 'supplyApy' | 'tvl' | 'riskRating' | 'sigma'
 type SortDirection = 'asc' | 'desc'
 
 interface PoolTableProps {
@@ -82,6 +82,14 @@ const PoolRow = memo(function PoolRow({ pool, index, onSelect }: PoolRowProps) {
         </span>
       </td>
       <td className="p-4 text-center">
+        <span className={`text-xs font-medium ${pool.sigma < 0.1 ? 'text-primary' :
+            pool.sigma < 0.25 ? 'text-yellow-500' :
+              'text-destructive'
+          }`}>
+          {pool.sigma < 0.1 ? 'Stable' : pool.sigma < 0.25 ? 'Moderate' : 'Volatile'}
+        </span>
+      </td>
+      <td className="p-4 text-center">
         <div className="flex items-center justify-center gap-1">
           <span title={pool.audited ? 'Audited' : 'Not Audited'}>
             <ShieldCheck className={`h-4 w-4 ${pool.audited ? 'text-primary' : 'text-muted-foreground/30'}`} />
@@ -148,6 +156,7 @@ export function PoolTable({ pools }: PoolTableProps) {
         case 'supplyApy': comparison = a.supplyApy - b.supplyApy; break
         case 'tvl': comparison = a.tvl - b.tvl; break
         case 'riskRating': comparison = riskOrder[a.riskRating] - riskOrder[b.riskRating]; break
+        case 'sigma': comparison = a.sigma - b.sigma; break
       }
       return sortDirection === 'asc' ? comparison : -comparison
     })
@@ -213,6 +222,7 @@ export function PoolTable({ pools }: PoolTableProps) {
                 <SortTh label="Supply APY" sortKeyName="supplyApy" align="right" />
                 <SortTh label="TVL" sortKeyName="tvl" align="right" />
                 <SortTh label="Risk" sortKeyName="riskRating" align="center" />
+                <SortTh label="Stability" sortKeyName="sigma" align="center" />
                 <th className="p-4 text-center">
                   <span className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Info</span>
                 </th>

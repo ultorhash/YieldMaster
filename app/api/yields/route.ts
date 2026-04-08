@@ -99,8 +99,8 @@ export async function GET() {
 
       return {
         id: pool.pool,
-        protocol,
-        chain,
+        protocol: protocol,
+        chain: chain,
         asset: symbol,
         assetType: getAssetType(symbol, pool.stablecoin),
         supplyApy: Math.round(supplyApy * 100) / 100,
@@ -110,7 +110,8 @@ export async function GET() {
         riskRating: calculateRiskRating(pool, protocol),
         audited: true,
         insurance: hasInsuranceCoverage(protocol),
-        poolUrl
+        poolUrl: poolUrl,
+        sigma: pool.sigma ?? 0
       }
     })
 

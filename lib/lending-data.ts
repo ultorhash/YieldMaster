@@ -33,6 +33,7 @@ export interface LendingPool {
   riskRating: RiskLevel
   audited: boolean
   insurance: boolean
+  sigma: number
 }
 
 export const RISK_COLORS: Record<RiskLevel, string> = {
