@@ -54,46 +54,15 @@ export default function LendingAggregator() {
 
   useNewDataToast(pools)
 
-  // Filtered pools
-  const filteredPools = useMemo(() => {
-    return pools.filter(pool => {
-      // Chain filter
-      if (selectedChains.length > 0 && !selectedChains.includes(pool.chain)) {
-        return false
-      }
-
-      // Protocol filter
-      if (selectedProtocols.length > 0 && !selectedProtocols.includes(pool.protocol)) {
-        return false
-      }
-
-      // Asset type filter
-      if (selectedAssetTypes.length > 0 && !selectedAssetTypes.includes(pool.assetType)) {
-        return false
-      }
-
-      // Search filter
-      if (searchQuery) {
-        const query = searchQuery.toLowerCase()
-        if (
-          !pool.asset.toLowerCase().includes(query) &&
-          !pool.protocol.toLowerCase().includes(query) &&
-          !pool.chain.toLowerCase().includes(query)
-        ) {
-          return false
-        }
-      }
-
-      // Min APY filter
-      if (minApy !== null && pool.supplyApy < minApy) {
-        return false
-      }
-
-      if (pool.tvl < minTvl) return false
-
-      return true
-    })
-  }, [pools, selectedChains, selectedProtocols, selectedAssetTypes, searchQuery, minApy, minTvl])
+  const filteredPools = useMemo(() =>
+    pools.filter(p =>
+      (selectedChains.length === 0 || selectedChains.includes(p.chain)) &&
+      (selectedProtocols.length === 0 || selectedProtocols.includes(p.protocol)) &&
+      (selectedAssetTypes.length === 0 || selectedAssetTypes.includes(p.assetType)) &&
+      (minApy === null || p.supplyApy >= minApy) &&
+      p.tvl >= minTvl
+    ),
+    [pools, selectedChains, selectedProtocols, selectedAssetTypes, minApy, minTvl])
 
   // Show loading state during initial hydration to prevent mismatch
   if (!mounted) {
