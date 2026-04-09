@@ -113,7 +113,7 @@ export default function LendingAggregator() {
 
       <main className="max-w-7xl mx-auto px-4 lg:px-6 py-6 space-y-6">
         {/* Stats Overview */}
-        <StatsCards pools={filteredPools} />
+        <StatsCards pools={filteredPools} isLoading={isLoading} />
 
         {/* Filters Section */}
         <div className="bg-card border border-border p-4 lg:p-5">
@@ -142,7 +142,7 @@ export default function LendingAggregator() {
         </div>
 
         {/* Pools Table */}
-        <PoolTable pools={filteredPools} />
+        <PoolTable pools={filteredPools} isLoading={isLoading} />
 
         {/* Footer */}
         <footer className="pt-6 border-t border-border">

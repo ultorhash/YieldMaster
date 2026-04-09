@@ -10,6 +10,7 @@ type SortDirection = 'asc' | 'desc'
 
 interface PoolTableProps {
   pools: LendingPool[]
+  isLoading: boolean
 }
 
 interface PoolRowProps {
@@ -124,7 +125,53 @@ const SortTh = memo(function SortTh({ label, sortKeyName, align = 'left', sortKe
   )
 })
 
-export function PoolTable({ pools }: PoolTableProps) {
+function SkeletonRow() {
+  return (
+    <tr className="border-b border-border/50">
+      <td className="p-4">
+        <div className="flex items-center gap-2">
+          <div className="h-4 w-14 bg-muted rounded animate-pulse" />
+          <div className="h-4 w-16 bg-muted rounded animate-pulse" />
+        </div>
+      </td>
+      <td className="p-4">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-muted animate-pulse" />
+          <div className="h-4 w-20 bg-muted rounded animate-pulse" />
+        </div>
+      </td>
+      <td className="p-4">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-muted animate-pulse" />
+          <div className="h-4 w-16 bg-muted rounded animate-pulse" />
+        </div>
+      </td>
+      <td className="p-4 text-right">
+        <div className="h-4 w-14 bg-muted rounded animate-pulse ml-auto" />
+      </td>
+      <td className="p-4 text-right">
+        <div className="h-4 w-16 bg-muted rounded animate-pulse ml-auto" />
+      </td>
+      <td className="p-4 text-center">
+        <div className="h-6 w-8 bg-muted rounded animate-pulse mx-auto" />
+      </td>
+      <td className="p-4 text-center">
+        <div className="h-4 w-12 bg-muted rounded animate-pulse mx-auto" />
+      </td>
+      <td className="p-4 text-center">
+        <div className="flex items-center justify-center gap-1">
+          <div className="h-4 w-4 bg-muted rounded animate-pulse" />
+          <div className="h-4 w-4 bg-muted rounded animate-pulse" />
+          <div className="h-4 w-4 bg-muted rounded animate-pulse" />
+          <div className="h-4 w-4 bg-muted rounded animate-pulse" />
+          <div className="h-4 w-4 bg-muted rounded animate-pulse" />
+        </div>
+      </td>
+    </tr>
+  )
+}
+
+export function PoolTable({ pools, isLoading }: PoolTableProps) {
   const [sortKey, setSortKey] = useState<SortKey>('riskRating')
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
   const [selectedPool, setSelectedPool] = useState<LendingPool | null>(null)
@@ -153,7 +200,7 @@ export function PoolTable({ pools }: PoolTableProps) {
     })
   }, [pools, sortKey, sortDirection])
 
-  if (pools.length === 0) {
+  if (!isLoading && pools.length === 0) {
     return (
       <div className="bg-card border border-border p-12 text-center">
         <p className="text-muted-foreground">No pools match the filter criteria</p>
@@ -190,9 +237,12 @@ export function PoolTable({ pools }: PoolTableProps) {
               </tr>
             </thead>
             <tbody>
-              {sortedPools.map((pool) => (
-                <PoolRow key={pool.id} pool={pool} onSelect={handleSelect} />
-              ))}
+              {isLoading
+                ? [...Array(10)].map((_, i) => <SkeletonRow key={i} />)
+                : sortedPools.map((pool) => (
+                  <PoolRow key={pool.id} pool={pool} onSelect={handleSelect} />
+                ))
+              }
             </tbody>
           </table>
         </div>
