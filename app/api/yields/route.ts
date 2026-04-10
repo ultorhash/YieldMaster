@@ -85,7 +85,8 @@ export async function GET() {
         pool.project in PROTOCOL_MAPPING &&
         supportedChains.includes(pool.chain) &&
         pool.tvlUsd > 10_000 &&
-        ((pool.apyBase ?? 0) + (pool.apyReward ?? 0)) > 0.01
+        ((pool.apyBase ?? 0) + (pool.apyReward ?? 0)) > 0.01 &&
+        pool.outlier === false
       )
     })
 
