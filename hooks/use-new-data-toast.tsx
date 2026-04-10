@@ -28,6 +28,30 @@ function saveBaseline(pools: LendingPool[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(baseline))
 }
 
+interface ToastContentProps {
+  t: string | number
+  label: string
+  value: string
+}
+
+function ToastContent({ t, label, value }: ToastContentProps) {
+  return (
+    <div className="relative bg-zinc-950 border border-green-500 p-3 w-[calc(100vw-32px)] sm:w-[356px] flex items-center justify-between gap-3">
+      <p className="text-xs text-white flex items-center gap-1.5 min-w-0">
+        <SquarePlus className="h-3 w-3 text-green-500 shrink-0" />
+        <span className="text-muted-foreground shrink-0">{label}:</span>
+        <span className="font-medium truncate">{value}</span>
+      </p>
+      <button
+        onClick={() => toast.dismiss(t)}
+        className="shrink-0 flex items-center px-2.5 py-1 text-xs text-muted-foreground hover:text-foreground border border-border hover:border-muted-foreground transition-colors cursor-pointer"
+      >
+        Got it!
+      </button>
+    </div>
+  )
+}
+
 export function useNewDataToast(pools: LendingPool[]) {
   const alreadyRan = useRef(false)
 
@@ -36,7 +60,6 @@ export function useNewDataToast(pools: LendingPool[]) {
 
     alreadyRan.current = true
 
-    // First run — silently save current protocols and chains as baseline
     if (getBaseline() === null) {
       saveBaseline(pools)
       return
@@ -50,24 +73,12 @@ export function useNewDataToast(pools: LendingPool[]) {
 
     if (!newProtocols.length && !newChains.length) return
 
-    // Update baseline so next visit won't show these again
     saveBaseline(pools)
 
     newProtocols.forEach((protocol, i) => {
       setTimeout(() => {
         toast.custom((t) => (
-          <div className="relative bg-zinc-950 border border-green-500 p-4 w-[356px] flex items-center justify-between">
-            <p className="text-white font-medium flex items-center gap-2">
-              <SquarePlus className="h-3.5 w-3.5 text-green-500" />
-              New protocol: {protocol}
-            </p>
-            <button
-              onClick={() => toast.dismiss(t)}
-              className="flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground border border-border hover:border-muted-foreground transition-colors cursor-pointer"
-            >
-              Got it!
-            </button>
-          </div>
+          <ToastContent t={t} label="New protocol" value={protocol} />
         ), { duration: Infinity })
       }, i * 200)
     })
@@ -75,18 +86,7 @@ export function useNewDataToast(pools: LendingPool[]) {
     newChains.forEach((chain, i) => {
       setTimeout(() => {
         toast.custom((t) => (
-          <div className="relative bg-zinc-950 border border-green-500 p-4 w-[356px] flex items-center justify-between">
-            <p className="text-white font-medium flex items-center gap-2">
-              <SquarePlus className="h-3.5 w-3.5 text-green-500" />
-              New chain: {chain}
-            </p>
-            <button
-              onClick={() => toast.dismiss(t)}
-              className="flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground border border-border hover:border-muted-foreground transition-colors cursor-pointer"
-            >
-              Got it!
-            </button>
-          </div>
+          <ToastContent t={t} label="New chain" value={chain} />
         ), { duration: Infinity })
       }, i * 200)
     })
