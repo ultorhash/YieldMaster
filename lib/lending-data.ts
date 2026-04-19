@@ -153,7 +153,7 @@ export const PROTOCOL_URLS: Record<Protocol, string> = {
 }
 
 export const EXPLOITED_PROTOCOLS: Record<string, ExploitRecord> = {
-  'Aave V3': { type: 'oracle' },
+  'Aave V3': { type: 'logic' },
   'Morpho': { type: 'oracle' },
   'Moonwell': { type: 'logic' },
   'Dolomite': { type: 'logic' },
