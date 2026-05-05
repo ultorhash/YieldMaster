@@ -6,9 +6,9 @@ export const CHAINS = [
 ] as const
 export const PROTOCOLS = [
   'Aave V3', 'Aave V4', 'Morpho', 'Euler', 'Compound V3', 'Spark', 'Fluid',
-  'ExtraFi XLend', 'Auto', 'Moonwell', '40acres', 'Dolomite', 'Flux', 'YO',
-  'Maple', 'TermMax', 'HyperLend', 'HypurrFi', 'Kamino', 'Save', 'Project Φ',
-  'Loopscale', 'Navi', 'Scallop'
+  'ExtraFi XLend', 'Auto', 'Moonwell', '40acres', 'Benqi', 'Dolomite', 'Flux',
+  'YO', 'Maple', 'TermMax', 'HyperLend', 'HypurrFi', 'Kamino', 'Save',
+  'Project Φ', 'Loopscale', 'Navi', 'Scallop'
 ] as const
 
 export type Chain = typeof CHAINS[number]
@@ -81,6 +81,7 @@ export const PROTOCOL_COLORS: Record<Protocol, string> = {
   'Auto': '#000000',
   'Moonwell': '#0069D3',
   '40acres': '#0A5631',
+  'Benqi': '#1396AA',
   'Dolomite': '#FFFFFF',
   'Flux': '#757575',
   'YO': '#D6FF34',
@@ -109,6 +110,7 @@ export const PROTOCOL_MAPPING: Record<string, string> = {
   'autofinance': 'Auto',
   'moonwell-lending': 'Moonwell',
   '40-acres': '40acres',
+  'benqi-lending': 'Benqi',
   'dolomite': 'Dolomite',
   'flux-finance': 'Flux',
   'yo-protocol': 'YO',
@@ -137,6 +139,7 @@ export const PROTOCOL_URLS: Record<Protocol, string> = {
   'Auto': 'https://app.auto.finance/',
   'Moonwell': 'https://moonwell.fi/markets',
   '40acres': 'https://www.40acres.finance/',
+  'Benqi': 'https://app.benqi.fi/lending',
   'Dolomite': 'https://app.dolomite.io/earn',
   'Flux': 'https://fluxfinance.com/lend',
   'YO': 'https://app.yo.xyz/',
